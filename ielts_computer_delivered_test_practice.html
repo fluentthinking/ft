@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IELTS Computer Delivered Practice Test</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Arial:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      user-select: text;
+    }
+    
+    /* IELTS Highlight Styling */
+    .ielts-highlight {
+      background-color: #ffff00 !important;
+      color: #000000 !important;
+    }
+
+    /* Drag and Drop styling */
+    .draggable-item {
+      cursor: grab;
+      touch-action: none;
+    }
+    .draggable-item:active {
+      cursor: grabbing;
+    }
+    .drop-zone.drag-over {
+      background-color: #e0f2fe;
+      border-color: #0284c7;
+    }
+
+    /* Standard dashed drop boxes matching Image 2 */
+    .drop-box {
+      border: 1.5px dashed #71717a;
+      min-width: 130px;
+      min-height: 38px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #ffffff;
+      transition: all 0.15s ease-in-out;
+    }
+
+    .drop-box.active {
+      border: 2px dashed #0284c7;
+      background-color: #f0f9ff;
+    }
+
+    .drop-box.has-item {
+      border-style: solid;
+      border-color: #a1a1aa;
+      background-color: #f4f4f5;
+    }
+
+    /* Context menu styling */
+    #context-menu {
+      display: none;
+      position: absolute;
+      z-index: 1000;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col justify-between text-gray-900 select-none">
+
+  <!-- Top IELTS System Header -->
+  <header class="bg-[#2c3e50] text-white px-6 py-2.5 flex justify-between items-center text-sm shadow">
+    <div class="flex items-center space-x-6">
+      <div class="font-bold text-lg tracking-wide flex items-center gap-2">
+        <span class="bg-red-600 text-white px-2 py-0.5 rounded text-xs tracking-widest font-black">IELTS</span>
+        <span>Listening Test</span>
+      </div>
+      <div class="text-xs bg-gray-700 px-3 py-1 rounded text-gray-200">
+        Candidate: <span class="font-bold text-white">123456 - DOE, JOHN</span>
+      </div>
+    </div>
+
+    <!-- Timer & Display options -->
+    <div class="flex items-center space-x-6 text-xs">
+      <div class="flex items-center gap-2 bg-black/30 px-3 py-1.5 rounded border border-gray-600">
+        <svg class="w-4 h-4 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <span>Time remaining: <strong id="timer" class="text-yellow-400 font-mono text-sm">29:45</strong></span>
+      </div>
+
+      <div class="flex items-center space-x-2">
+        <button id="toggle-contrast" class="bg-gray-700 hover:bg-gray-600 text-white px-2.5 py-1 rounded border border-gray-500 transition">
+          Contrast
+        </button>
+        <button id="help-btn" class="bg-gray-700 hover:bg-gray-600 text-white px-2.5 py-1 rounded border border-gray-500 transition">
+          Help
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Exam Content Area -->
+  <main id="main-container" class="flex-grow max-w-7xl w-full mx-auto p-6 md:p-8 my-4 bg-white shadow-md border border-gray-300 rounded-sm">
+    
+    <!-- Top Instructions Bar -->
+    <div class="mb-8 pb-4 border-b border-gray-200">
+      <h2 class="text-lg font-bold text-gray-900 mb-1">Part 2</h2>
+      <p class="text-base text-gray-800 leading-relaxed font-normal select-text">
+        Which advantage is mentioned for each of the following restaurants? 
+        <br>
+        <span class="italic font-medium">Choose <strong>SIX</strong> answers from the box and move it into the gap.</span>
+      </p>
+    </div>
+
+    <!-- Instructions banner for interactive feature tips -->
+    <div class="bg-blue-50 border-l-4 border-blue-500 text-blue-800 p-3 mb-6 text-xs flex justify-between items-center rounded-r">
+      <div class="flex items-center gap-2">
+        <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+        </svg>
+        <span><strong>Tips:</strong> Drag items into slots OR click an item on the right and click a gap on the left. Select any text to <strong>Highlight</strong> or add a <strong>Note</strong>.</span>
+      </div>
+      <button onclick="this.parentElement.style.display='none'" class="text-blue-600 font-bold hover:text-blue-800">&times;</button>
+    </div>
+
+    <!-- Two Column Layout matching Image 2 styling -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+      
+      <!-- Left Column: Questions / Restaurants (Questions 15 - 20) -->
+      <div class="md:col-span-6 space-y-5">
+        <h3 class="text-xl font-bold text-gray-900 mb-4 select-text">Restaurants</h3>
+
+        <!-- Question 15 -->
+        <div class="flex items-center justify-between p-2 rounded hover:bg-gray-50 transition" data-q="15">
+          <span class="text-base font-normal text-gray-900 select-text">
+            <strong class="mr-2">15</strong> Merrivales
+          </span>
+          <div id="slot-15" class="drop-zone drop-box" data-question="15">
+            <span class="text-gray-400 font-bold text-sm select-none placeholder-num">15</span>
+          </div>
+        </div>
+
+        <!-- Question 16 -->
+        <div class="flex items-center justify-between p-2 rounded hover:bg-gray-50 transition" data-q="16">
+          <span class="text-base font-normal text-gray-900 select-text">
+            <strong class="mr-2">16</strong> The Lobster Pot
+          </span>
+          <div id="slot-16" class="drop-zone drop-box" data-question="16">
+            <span class="text-gray-400 font-bold text-sm select-none placeholder-num">16</span>
+          </div>
+        </div>
+
+        <!-- Question 17 -->
+        <div class="flex items-center justify-between p-2 rounded hover:bg-gray-50 transition" data-q="17">
+          <span class="text-base font-normal text-gray-900 select-text">
+            <strong class="mr-2">17</strong> Elliots
+          </span>
+          <div id="slot-17" class="drop-zone drop-box" data-question="17">
+            <span class="text-gray-400 font-bold text-sm select-none placeholder-num">17</span>
+          </div>
+        </div>
+
+        <!-- Question 18 -->
+        <div class="flex items-center justify-between p-2 rounded hover:bg-gray-50 transition" data-q="18">
+          <span class="text-base font-normal text-gray-900 select-text">
+            <strong class="mr-2">18</strong> The Cabin
+          </span>
+          <div id="slot-18" class="drop-zone drop-box" data-question="18">
+            <span class="text-gray-400 font-bold text-sm select-none placeholder-num">18</span>
+          </div>
+        </div>
+
+        <!-- Question 19 -->
+        <div class="flex items-center justify-between p-2 rounded hover:bg-gray-50 transition" data-q="19">
+          <span class="text-base font-normal text-gray-900 select-text">
+            <strong class="mr-2">19</strong> The Olive Tree
+          </span>
+          <div id="slot-19" class="drop-zone drop-box" data-question="19">
+            <span class="text-gray-400 font-bold text-sm select-none placeholder-num">19</span>
+          </div>
+        </div>
+
+        <!-- Question 20 -->
+        <div class="flex items-center justify-between p-2 rounded hover:bg-gray-50 transition" data-q="20">
+          <span class="text-base font-normal text-gray-900 select-text">
+            <strong class="mr-2">20</strong> The Old School Restaurant
+          </span>
+          <div id="slot-20" class="drop-zone drop-box" data-question="20">
+            <span class="text-gray-400 font-bold text-sm select-none placeholder-num">20</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Advantages Pool (Items A - H) -->
+      <div class="md:col-span-6 bg-gray-50 p-6 rounded-lg border border-gray-200 shadow-inner">
+        <h3 class="text-xl font-bold text-gray-900 mb-4 select-text">Advantages</h3>
+
+        <div id="options-pool" class="flex flex-col space-y-2.5">
+          <!-- Item A -->
+          <div draggable="true" id="opt-A" data-letter="A" data-text="the decoration"
+               class="draggable-item bg-white border border-gray-300 rounded px-4 py-2 flex items-center shadow-sm hover:border-gray-400 hover:shadow transition select-none">
+            <span class="font-bold mr-3 text-gray-700">A</span>
+            <span class="text-gray-800">the decoration</span>
+          </div>
+
+          <!-- Item B -->
+          <div draggable="true" id="opt-B" data-letter="B" data-text="easy parking"
+               class="draggable-item bg-white border border-gray-300 rounded px-4 py-2 flex items-center shadow-sm hover:border-gray-400 hover:shadow transition select-none">
+            <span class="font-bold mr-3 text-gray-700">B</span>
+            <span class="text-gray-800">easy parking</span>
+          </div>
+
+          <!-- Item C -->
+          <div draggable="true" id="opt-C" data-letter="C" data-text="entertainment"
+               class="draggable-item bg-white border border-gray-300 rounded px-4 py-2 flex items-center shadow-sm hover:border-gray-400 hover:shadow transition select-none">
+            <span class="font-bold mr-3 text-gray-700">C</span>
+            <span class="text-gray-800">entertainment</span>
+          </div>
+
+          <!-- Item D -->
+          <div draggable="true" id="opt-D" data-letter="D" data-text="excellent service"
+               class="draggable-item bg-white border border-gray-300 rounded px-4 py-2 flex items-center shadow-sm hover:border-gray-400 hover:shadow transition select-none">
+            <span class="font-bold mr-3 text-gray-700">D</span>
+            <span class="text-gray-800">excellent service</span>
+          </div>
+
+          <!-- Item E -->
+          <div draggable="true" id="opt-E" data-letter="E" data-text="good value"
+               class="draggable-item bg-white border border-gray-300 rounded px-4 py-2 flex items-center shadow-sm hover:border-gray-400 hover:shadow transition select-none">
+            <span class="font-bold mr-3 text-gray-700">E</span>
+            <span class="text-gray-800">good value</span>
+          </div>
+
+          <!-- Item F -->
+          <div draggable="true" id="opt-F" data-letter="F" data-text="good views"
+               class="draggable-item bg-white border border-gray-300 rounded px-4 py-2 flex items-center shadow-sm hover:border-gray-400 hover:shadow transition select-none">
+            <span class="font-bold mr-3 text-gray-700">F</span>
+            <span class="text-gray-800">good views</span>
+          </div>
+
+          <!-- Item G -->
+          <div draggable="true" id="opt-G" data-letter="G" data-text="quiet location"
+               class="draggable-item bg-white border border-gray-300 rounded px-4 py-2 flex items-center shadow-sm hover:border-gray-400 hover:shadow transition select-none">
+            <span class="font-bold mr-3 text-gray-700">G</span>
+            <span class="text-gray-800">quiet location</span>
+          </div>
+
+          <!-- Item H -->
+          <div draggable="true" id="opt-H" data-letter="H" data-text="wide menu"
+               class="draggable-item bg-white border border-gray-300 rounded px-4 py-2 flex items-center shadow-sm hover:border-gray-400 hover:shadow transition select-none">
+            <span class="font-bold mr-3 text-gray-700">H</span>
+            <span class="text-gray-800">wide menu</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Submit / Check Answers Action Area -->
+    <div class="mt-8 pt-4 border-t border-gray-200 flex justify-between items-center">
+      <button id="reset-btn" class="px-4 py-2 bg-gray-200 text-gray-700 font-semibold rounded hover:bg-gray-300 transition text-sm">
+        Reset All Answers
+      </button>
+
+      <button id="submit-btn" class="px-6 py-2 bg border border-blue-800 bg-blue-700 text-white font-bold rounded hover:bg-blue-800 shadow transition text-sm flex items-center gap-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+        Check Answers
+      </button>
+    </div>
+
+    <!-- Results Modal / Box -->
+    <div id="results-box" class="hidden mt-6 p-4 rounded-lg border"></div>
+
+  </main>
+
+  <!-- IELTS Question Navigation Footer -->
+  <footer class="bg-[#1e293b] text-white px-6 py-3 border-t-2 border-yellow-500 shadow-inner">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+      
+      <!-- Part summary -->
+      <div class="flex items-center space-x-2 text-xs text-gray-300">
+        <span class="font-bold text-white">Part 2 Questions 15-20</span>
+      </div>
+
+      <!-- Question numbers status bar (Standard IELTS Navigation) -->
+      <div class="flex items-center space-x-2">
+        <span class="text-xs text-gray-400 mr-2">Review:</span>
+        <div class="flex space-x-1.5" id="nav-buttons-container">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Next/Prev Buttons -->
+      <div class="flex items-center space-x-3">
+        <button class="px-4 py-1.5 bg-gray-700 hover:bg-gray-600 text-gray-200 text-xs font-bold rounded border border-gray-500">
+          &larr; Back
+        </button>
+        <button class="px-4 py-1.5 bg-yellow-500 hover:bg-yellow-400 text-gray-900 text-xs font-bold rounded shadow">
+          Next &rarr;
+        </button>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Context Menu for Highlight & Notes -->
+  <div id="context-menu" class="bg-white border border-gray-300 rounded shadow-lg py-1 w-36 text-sm">
+    <button id="menu-highlight" class="w-full text-left px-4 py-2 hover:bg-yellow-100 flex items-center gap-2 text-gray-800">
+      <span class="w-3 h-3 bg-yellow-400 rounded-full border border-yellow-500 inline-block"></span>
+      Highlight
+    </button>
+    <button id="menu-clear" class="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center gap-2 text-gray-700 border-t border-gray-100">
+      <svg class="w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+      </svg>
+      Clear Highlight
+    </button>
+  </div>
+
+  <script>
+    // Correct Answers Key (Based on IELTS Listening Part 2 standard key format)
+    const CORRECT_ANSWERS = {
+      "15": "H", // Merrivales - wide menu
+      "16": "F", // The Lobster Pot - good views
+      "17": "C", // Elliots - entertainment
+      "18": "A", // The Cabin - decoration
+      "19": "E", // The Olive Tree - good value
+      "20": "B"  // The Old School Restaurant - easy parking
+    };
+
+    // State Tracking
+    const userAnswers = {
+      "15": null,
+      "16": null,
+      "17": null,
+      "18": null,
+      "19": null,
+      "20": null
+    };
+
+    let selectedOptionElement = null;
+
+    // --- DOM Elements ---
+    const optionsPool = document.getElementById('options-pool');
+    const dropZones = document.querySelectorAll('.drop-zone');
+    const draggableItems = document.querySelectorAll('.draggable-item');
+    const navContainer = document.getElementById('nav-buttons-container');
+    const submitBtn = document.getElementById('submit-btn');
+    const resetBtn = document.getElementById('reset-btn');
+    const resultsBox = document.getElementById('results-box');
+    const contextMenu = document.getElementById('context-menu');
+
+    // --- 1. Navigation Buttons Initialization ---
+    function initNavigation() {
+      navContainer.innerHTML = '';
+      for (let q = 15; q <= 20; q++) {
+        const qStr = q.toString();
+        const btn = document.createElement('button');
+        btn.id = `nav-btn-${qStr}`;
+        btn.className = `w-7 h-7 text-xs font-bold rounded flex items-center justify-center transition border ${
+          userAnswers[qStr] 
+            ? 'bg-blue-600 text-white border-blue-400' 
+            : 'bg-gray-800 text-gray-300 border-gray-600 hover:bg-gray-700'
+        }`;
+        btn.textContent = qStr;
+        btn.addEventListener('click', () => {
+          const targetSlot = document.getElementById(`slot-${qStr}`);
+          if (targetSlot) {
+            targetSlot.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            targetSlot.classList.add('ring-2', 'ring-blue-500');
+            setTimeout(() => targetSlot.classList.remove('ring-2', 'ring-blue-500'), 1500);
+          }
+        });
+        navContainer.appendChild(btn);
+      }
+    }
+
+    function updateNavStatus(qNum) {
+      const btn = document.getElementById(`nav-btn-${qNum}`);
+      if (!btn) return;
+      if (userAnswers[qNum]) {
+        btn.className = 'w-7 h-7 text-xs font-bold rounded flex items-center justify-center transition bg-blue-500 text-white border border-blue-400 shadow-sm';
+      } else {
+        btn.className = 'w-7 h-7 text-xs font-bold rounded flex items-center justify-center transition bg-gray-800 text-gray-300 border border-gray-600 hover:bg-gray-700';
+      }
+    }
+
+    // --- 2. Drag & Drop Engine ---
+    draggableItems.forEach(item => {
+      item.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', item.id);
+        item.classList.add('opacity-50');
+      });
+
+      item.addEventListener('dragend', () => {
+        item.classList.remove('opacity-50');
+      });
+
+      // Click to select logic (Alternative to drag)
+      item.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (selectedOptionElement === item) {
+          deselectOption();
+        } else {
+          deselectOption();
+          selectedOptionElement = item;
+          item.classList.add('ring-2', 'ring-blue-500', 'bg-blue-50');
+        }
+      });
+    });
+
+    function deselectOption() {
+      if (selectedOptionElement) {
+        selectedOptionElement.classList.remove('ring-2', 'ring-blue-500', 'bg-blue-50');
+        selectedOptionElement = null;
+      }
+    }
+
+    dropZones.forEach(zone => {
+      zone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        zone.classList.add('drag-over');
+      });
+
+      zone.addEventListener('dragleave', () => {
+        zone.classList.remove('drag-over');
+      });
+
+      zone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        zone.classList.remove('drag-over');
+        const itemId = e.dataTransfer.getData('text/plain');
+        const draggedEl = document.getElementById(itemId);
+        if (draggedEl) {
+          placeItemInSlot(draggedEl, zone);
+        }
+      });
+
+      // Click slot to place selected option
+      zone.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const questionNum = zone.getAttribute('data-question');
+
+        // If a pool item is selected, place it here
+        if (selectedOptionElement) {
+          placeItemInSlot(selectedOptionElement, zone);
+          deselectOption();
+        } else if (userAnswers[questionNum]) {
+          // If slot already has an item and user clicks it, remove item back to pool
+          removeSlotItem(zone);
+        }
+      });
+    });
+
+    // Return item from slot to pool when clicking inside pool or background
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.draggable-item') && !e.target.closest('.drop-zone')) {
+        deselectOption();
+      }
+    });
+
+    function placeItemInSlot(itemEl, slotEl) {
+      const qNum = slotEl.getAttribute('data-question');
+      
+      // If slot already contains an item, send that item back to pool first
+      removeSlotItem(slotEl);
+
+      // Clone or move element into slot formatted like IELTS CBT (e.g. "A the decoration")
+      const letter = itemEl.getAttribute('data-letter');
+      const text = itemEl.getAttribute('data-text');
+
+      // Create compact element for inside the box
+      const placedDisplay = document.createElement('div');
+      placedDisplay.className = 'w-full h-full flex items-center justify-between px-3 text-sm font-semibold text-gray-800 bg-gray-100 rounded border border-gray-300';
+      placedDisplay.innerHTML = `
+        <span><strong class="text-blue-700 mr-1.5">${letter}</strong> ${text}</span>
+        <span class="text-xs text-gray-400 hover:text-red-500 cursor-pointer ml-2">&times;</span>
+      `;
+
+      // Clear placeholder and append
+      slotEl.innerHTML = '';
+      slotEl.appendChild(placedDisplay);
+      slotEl.classList.add('has-item');
+
+      // Hide original item in pool to prevent duplicate usage
+      itemEl.style.display = 'none';
+
+      // Record answer state
+      userAnswers[qNum] = letter;
+      updateNavStatus(qNum);
+    }
+
+    function removeSlotItem(slotEl) {
+      const qNum = slotEl.getAttribute('data-question');
+      const currentLetter = userAnswers[qNum];
+
+      if (currentLetter) {
+        // Unhide original item in pool
+        const poolItem = document.getElementById(`opt-${currentLetter}`);
+        if (poolItem) {
+          poolItem.style.display = 'flex';
+        }
+
+        // Restore placeholder number in slot
+        slotEl.innerHTML = `<span class="text-gray-400 font-bold text-sm select-none placeholder-num">${qNum}</span>`;
+        slotEl.classList.remove('has-item');
+
+        // Clear answer state
+        userAnswers[qNum] = null;
+        updateNavStatus(qNum);
+      }
+    }
+
+    // RESET ALL
+    resetBtn.addEventListener('click', () => {
+      dropZones.forEach(zone => removeSlotItem(zone));
+      resultsBox.classList.add('hidden');
+    });
+
+    // CHECK ANSWERS / SUBMIT
+    submitBtn.addEventListener('click', () => {
+      let score = 0;
+      let total = 6;
+      let html = '<h4 class="font-bold text-base mb-2">Test Results Summary:</h4><ul class="space-y-1.5 text-sm">';
+
+      for (let q = 15; q <= 20; q++) {
+        const qStr = q.toString();
+        const userAns = userAnswers[qStr];
+        const correctAns = CORRECT_ANSWERS[qStr];
+        const isCorrect = userAns === correctAns;
+
+        if (isCorrect) score++;
+
+        html += `
+          <li class="flex items-center gap-2">
+            <span class="font-bold w-28">Question ${qStr}:</span>
+            ${userAns ? `Your answer: <strong>${userAns}</strong>` : '<span class="text-gray-500 italic">Not answered</span>'}
+            ${isCorrect 
+              ? '<span class="text-green-600 font-bold flex items-center gap-1 ml-2">✓ Correct</span>' 
+              : `<span class="text-red-600 font-bold flex items-center gap-1 ml-2">✗ Incorrect (Correct: ${correctAns})</span>`}
+          </li>
+        `;
+      }
+
+      const percent = Math.round((score / total) * 100);
+      html += `</ul>
+        <div class="mt-4 pt-2 border-t border-gray-300 font-bold text-base flex justify-between items-center">
+          <span>Overall Score: ${score} / ${total} (${percent}%)</span>
+          <span class="px-3 py-1 rounded text-xs ${score >= 4 ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'}">
+            ${score >= 5 ? 'Excellent Band Score Equivalent' : 'Practice More'}
+          </span>
+        </div>`;
+
+      resultsBox.innerHTML = html;
+      resultsBox.className = `mt-6 p-4 rounded-lg border ${score === total ? 'bg-green-50 border-green-300' : 'bg-gray-50 border-gray-300'}`;
+      resultsBox.classList.remove('hidden');
+      resultsBox.scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // --- 3. Text Highlighting & Context Menu Feature ---
+    let currentSelectionRange = null;
+
+    document.addEventListener('contextmenu', (e) => {
+      const selectedText = window.getSelection().toString().trim();
+      
+      // Allow context menu only if there is a text selection or clicked on a highlighted span
+      if (selectedText.length > 0 || e.target.classList.contains('ielts-highlight')) {
+        e.preventDefault();
+        
+        // Store current selection range
+        const selection = window.getSelection();
+        if (selection.rangeCount > 0) {
+          currentSelectionRange = selection.getRangeAt(0);
+        }
+
+        // Position custom context menu near mouse
+        contextMenu.style.top = `${e.pageY}px`;
+        contextMenu.style.left = `${e.pageX}px`;
+        contextMenu.style.display = 'block';
+      } else {
+        contextMenu.style.display = 'none';
+      }
+    });
+
+    // Hide context menu on click elsewhere
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#context-menu')) {
+        contextMenu.style.display = 'none';
+      }
+    });
+
+    // Apply Highlight action
+    document.getElementById('menu-highlight').addEventListener('click', () => {
+      contextMenu.style.display = 'none';
+      if (!currentSelectionRange) return;
+
+      try {
+        const span = document.createElement('span');
+        span.className = 'ielts-highlight';
+        currentSelectionRange.surroundContents(span);
+      } catch (err) {
+        // Fallback for complex selections spanning multiple tags
+        console.log('Highlight range issue:', err);
+      }
+      window.getSelection().removeAllRanges();
+    });
+
+    // Clear Highlight action
+    document.getElementById('menu-clear').addEventListener('click', () => {
+      contextMenu.style.display = 'none';
+      const selection = window.getSelection();
+      
+      if (selection.anchorNode) {
+        let node = selection.anchorNode.parentElement;
+        while (node && !node.classList.contains('ielts-highlight') && node !== document.body) {
+          node = node.parentElement;
+        }
+
+        if (node && node.classList.contains('ielts-highlight')) {
+          const parent = node.parentNode;
+          while (node.firstChild) {
+            parent.insertBefore(node.firstChild, node);
+          }
+          parent.removeChild(node);
+        }
+      }
+    });
+
+    // Timer simulation
+    function startTimer(durationSeconds) {
+      let timer = durationSeconds;
+      const timerEl = document.getElementById('timer');
+      setInterval(() => {
+        const minutes = Math.floor(timer / 60);
+        const seconds = timer % 60;
+        timerEl.textContent = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        if (--timer < 0) {
+          timer = durationSeconds;
+        }
+      }, 1000);
+    }
+
+    // High Contrast Toggle
+    document.getElementById('toggle-contrast').addEventListener('click', () => {
+      document.body.classList.toggle('invert');
+    });
+
+    // Initialize on page load
+    window.onload = function() {
+      initNavigation();
+      startTimer(1785); // 29m 45s
+    };
+  </script>
+</body>
+</html>
