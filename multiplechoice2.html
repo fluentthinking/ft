@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IELTS Computer-Delivered Listening Test Practice</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Arial:wght@400;700&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      user-select: text;
+    }
+    
+    /* Official IELTS Text Highlight */
+    .ielts-highlight {
+      background-color: #ffeb3b !important;
+      color: #000000 !important;
+      padding: 0 1px;
+    }
+
+    /* Custom Checkbox Option Styling */
+    .ielts-option {
+      transition: all 0.15s ease-in-out;
+      border: 1px solid #cbd5e1;
+    }
+
+    .ielts-option:hover {
+      background-color: #f8fafc;
+      border-color: #94a3b8;
+    }
+
+    .ielts-option.selected {
+      background-color: #eff6ff;
+      border-color: #2563eb;
+    }
+
+    .ielts-checkbox {
+      width: 18px;
+      height: 18px;
+      border: 2px solid #64748b;
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #ffffff;
+      flex-shrink: 0;
+      transition: all 0.1s ease;
+    }
+
+    .ielts-option.selected .ielts-checkbox {
+      border-color: #2563eb;
+      background-color: #2563eb;
+    }
+
+    .ielts-checkbox::after {
+      content: '';
+      width: 5px;
+      height: 9px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+      display: none;
+      margin-bottom: 2px;
+    }
+
+    .ielts-option.selected .ielts-checkbox::after {
+      display: block;
+    }
+
+    /* IELTS Context Menu */
+    #context-menu {
+      display: none;
+      position: absolute;
+      z-index: 1000;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col justify-between text-gray-900 select-none">
+
+  <!-- Top IELTS Header -->
+  <header class="bg-[#2c3e50] text-white px-6 py-3 flex justify-between items-center text-sm shadow">
+    <div class="flex items-center space-x-6">
+      <div class="font-bold text-lg tracking-wide flex items-center gap-2">
+        <span class="bg-red-600 text-white px-2 py-0.5 rounded text-xs tracking-widest font-black">IELTS</span>
+        <span>Listening Practice</span>
+      </div>
+      <div class="text-xs bg-gray-700 px-3 py-1 rounded text-gray-200">
+        Candidate: <span class="font-bold text-white">123456 - DOE, JOHN</span>
+      </div>
+    </div>
+
+    <!-- Audio Player Controller Widget -->
+    <div class="flex items-center space-x-6 text-xs">
+      <div class="flex items-center space-x-2 bg-gray-800 px-3 py-1.5 rounded border border-gray-600">
+        <svg class="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+        </svg>
+        <span class="text-gray-300 text-[11px] font-mono">Volume</span>
+        <input id="volume-slider" type="range" min="0" max="100" value="80" class="w-16 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-blue-500">
+      </div>
+
+      <div class="flex items-center space-x-2">
+        <button id="toggle-contrast" class="bg-gray-700 hover:bg-gray-600 text-white px-3 py-1.5 rounded border border-gray-500 transition">
+          Contrast
+        </button>
+        <button id="help-btn" class="bg-gray-700 hover:bg-gray-600 text-white px-3 py-1.5 rounded border border-gray-500 transition">
+          Help
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Exam Content Area -->
+  <main id="main-container" class="flex-grow max-w-5xl w-full mx-auto p-6 md:p-8 my-4 bg-white shadow-md border border-gray-300 rounded-sm flex flex-col justify-between">
+    <div class="space-y-8">
+
+      <!-- ================= SECTION 1: Questions 21 and 22 ================= -->
+      <section id="section-21-22" class="border-b border-gray-200 pb-8">
+        <div class="mb-4">
+          <div class="flex items-center gap-2 mb-1">
+            <h2 class="text-lg font-bold text-gray-900 select-text">Questions 21 and 22</h2>
+          </div>
+          <p class="text-base text-gray-800 leading-relaxed italic select-text">
+            Choose <strong class="not-italic">TWO</strong> letters, <strong class="not-italic">A–E</strong>.
+          </p>
+        </div>
+
+        <div class="mb-4">
+          <p class="text-base font-bold text-gray-900 select-text">
+            Which <span class="uppercase">TWO</span> possible objections to a roof garden are discussed?
+          </p>
+        </div>
+
+        <!-- Options Block (Group 1) -->
+        <div class="space-y-2.5 max-w-2xl pl-1" data-group="g1">
+          <div class="ielts-option flex items-center space-x-3 p-3 rounded cursor-pointer select-none" data-value="A" onclick="toggleOption('g1', 'A')">
+            <div class="ielts-checkbox"></div>
+            <span class="font-bold text-gray-900 w-5">A</span>
+            <span class="text-gray-800 text-base select-text">problems of access</span>
+          </div>
+
+          <div class="ielts-option flex items-center space-x-3 p-3 rounded cursor-pointer select-none" data-value="B" onclick="toggleOption('g1', 'B')">
+            <div class="ielts-checkbox"></div>
+            <span class="font-bold text-gray-900 w-5">B</span>
+            <span class="text-gray-800 text-base select-text">the cost of construction</span>
+          </div>
+
+          <div class="ielts-option flex items-center space-x-3 p-3 rounded cursor-pointer select-none" data-value="C" onclick="toggleOption('g1', 'C')">
+            <div class="ielts-checkbox"></div>
+            <span class="font-bold text-gray-900 w-5">C</span>
+            <span class="text-gray-800 text-base select-text">the time needed to install it</span>
+          </div>
+
+          <div class="ielts-option flex items-center space-x-3 p-3 rounded cursor-pointer select-none" data-value="D" onclick="toggleOption('g1', 'D')">
+            <div class="ielts-checkbox"></div>
+            <span class="font-bold text-gray-900 w-5">D</span>
+            <span class="text-gray-800 text-base select-text">who will look after it</span>
+          </div>
+
+          <div class="ielts-option flex items-center space-x-3 p-3 rounded cursor-pointer select-none" data-value="E" onclick="toggleOption('g1', 'E')">
+            <div class="ielts-checkbox"></div>
+            <span class="font-bold text-gray-900 w-5">E</span>
+            <span class="text-gray-800 text-base select-text">how to support the weight of it</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SECTION 2: Questions 23 and 24 ================= -->
+      <section id="section-23-24" class="pt-2">
+        <div class="mb-4">
+          <div class="flex items-center gap-2 mb-1">
+            <h2 class="text-lg font-bold text-gray-900 select-text">Questions 23 and 24</h2>
+          </div>
+          <p class="text-base text-gray-800 leading-relaxed italic select-text">
+            Choose <strong class="not-italic">TWO</strong> letters, <strong class="not-italic">A–E</strong>.
+          </p>
+        </div>
+
+        <div class="mb-4">
+          <p class="text-base font-bold text-gray-900 select-text">
+            Which <span class="uppercase">TWO</span> recent developments in roof-garden building are mentioned?
+          </p>
+        </div>
+
+        <!-- Options Block (Group 2) -->
+        <div class="space-y-2.5 max-w-2xl pl-1" data-group="g2">
+          <div class="ielts-option flex items-center space-x-3 p-3 rounded cursor-pointer select-none" data-value="A" onclick="toggleOption('g2', 'A')">
+            <div class="ielts-checkbox"></div>
+            <span class="font-bold text-gray-900 w-5">A</span>
+            <span class="text-gray-800 text-base select-text">waterproof barrier materials</span>
+          </div>
+
+          <div class="ielts-option flex items-center space-x-3 p-3 rounded cursor-pointer select-none" data-value="B" onclick="toggleOption('g2', 'B')">
+            <div class="ielts-checkbox"></div>
+            <span class="font-bold text-gray-900 w-5">B</span>
+            <span class="text-gray-800 text-base select-text">drainage systems</span>
+          </div>
+
+          <div class="ielts-option flex items-center space-x-3 p-3 rounded cursor-pointer select-none" data-value="C" onclick="toggleOption('g2', 'C')">
+            <div class="ielts-checkbox"></div>
+            <span class="font-bold text-gray-900 w-5">C</span>
+            <span class="text-gray-800 text-base select-text">tank designs</span>
+          </div>
+
+          <div class="ielts-option flex items-center space-x-3 p-3 rounded cursor-pointer select-none" data-value="D" onclick="toggleOption('g2', 'D')">
+            <div class="ielts-checkbox"></div>
+            <span class="font-bold text-gray-900 w-5">D</span>
+            <span class="text-gray-800 text-base select-text">lightweight construction materials</span>
+          </div>
+
+          <div class="ielts-option flex items-center space-x-3 p-3 rounded cursor-pointer select-none" data-value="E" onclick="toggleOption('g2', 'E')">
+            <div class="ielts-checkbox"></div>
+            <span class="font-bold text-gray-900 w-5">E</span>
+            <span class="text-gray-800 text-base select-text">watering systems</span>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- IELTS Question Navigation Footer -->
+  <footer class="bg-[#1e293b] text-white px-6 py-3 border-t-2 border-yellow-500 shadow-inner">
+    <div class="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+      
+      <div class="flex items-center space-x-2 text-xs text-gray-300">
+        <span class="font-bold text-white">Questions 21–24</span>
+      </div>
+
+      <!-- Question numbers status bar (21, 22, 23, 24) -->
+      <div class="flex items-center space-x-2">
+        <span class="text-xs text-gray-400 mr-2">Review:</span>
+        <div class="flex space-x-2" id="nav-buttons-container">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-3">
+        <button class="px-4 py-1.5 bg-gray-700 hover:bg-gray-600 text-gray-200 text-xs font-bold rounded border border-gray-500">
+          &larr; Back
+        </button>
+        <button class="px-4 py-1.5 bg-yellow-500 hover:bg-yellow-400 text-gray-900 text-xs font-bold rounded shadow">
+          Next &rarr;
+        </button>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Context Menu for Text Highlighting -->
+  <div id="context-menu" class="bg-white border border-gray-300 rounded shadow-lg py-1 w-36 text-sm">
+    <button id="menu-highlight" class="w-full text-left px-4 py-2 hover:bg-yellow-100 flex items-center gap-2 text-gray-800">
+      <span class="w-3 h-3 bg-yellow-400 rounded-full border border-yellow-500 inline-block"></span>
+      Highlight
+    </button>
+    <button id="menu-clear" class="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center gap-2 text-gray-700 border-t border-gray-100">
+      <svg class="w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+      </svg>
+      Clear Highlight
+    </button>
+  </div>
+
+  <script>
+    // Selection state for both question sets
+    const selections = {
+      g1: [], // Questions 21 and 22
+      g2: []  // Questions 23 and 24
+    };
+
+    const navContainer = document.getElementById('nav-buttons-container');
+    const contextMenu = document.getElementById('context-menu');
+
+    // --- 1. Selection & Option Logic ---
+    function toggleOption(group, val) {
+      const groupList = selections[group];
+      const idx = groupList.indexOf(val);
+
+      if (idx > -1) {
+        // Deselect option
+        groupList.splice(idx, 1);
+      } else {
+        // Enforce max 2 selections per question group
+        if (groupList.length >= 2) {
+          // Remove earliest selection
+          groupList.shift();
+        }
+        groupList.push(val);
+      }
+
+      updateGroupUI(group);
+      updateNavigation();
+    }
+
+    function updateGroupUI(group) {
+      const container = document.querySelector(`[data-group="${group}"]`);
+      if (!container) return;
+
+      const options = container.querySelectorAll('.ielts-option');
+      options.forEach(opt => {
+        const val = opt.getAttribute('data-value');
+        if (selections[group].includes(val)) {
+          opt.classList.add('selected');
+        } else {
+          opt.classList.remove('selected');
+        }
+      });
+    }
+
+    // --- 2. Bottom Navigation Bar Sync (21, 22, 23, 24) ---
+    function initNavigation() {
+      navContainer.innerHTML = '';
+      const qNums = [21, 22, 23, 24];
+
+      qNums.forEach(q => {
+        const btn = document.createElement('button');
+        btn.id = `nav-btn-${q}`;
+        btn.className = 'w-8 h-8 text-xs font-bold rounded flex items-center justify-center transition bg-gray-800 text-gray-300 border border-gray-600 hover:bg-gray-700';
+        btn.textContent = q;
+
+        btn.addEventListener('click', () => {
+          const targetSec = (q === 21 || q === 22) ? 'section-21-22' : 'section-23-24';
+          const el = document.getElementById(targetSec);
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+
+        navContainer.appendChild(btn);
+      });
+
+      updateNavigation();
+    }
+
+    function updateNavigation() {
+      // Group 1 controls Q21 & Q22
+      const g1Count = selections.g1.length;
+      setNavActive(21, g1Count >= 1);
+      setNavActive(22, g1Count >= 2);
+
+      // Group 2 controls Q23 & Q24
+      const g2Count = selections.g2.length;
+      setNavActive(23, g2Count >= 1);
+      setNavActive(24, g2Count >= 2);
+    }
+
+    function setNavActive(qNum, isActive) {
+      const btn = document.getElementById(`nav-btn-${qNum}`);
+      if (!btn) return;
+
+      if (isActive) {
+        btn.className = 'w-8 h-8 text-xs font-bold rounded flex items-center justify-center transition bg-blue-600 text-white border border-blue-400 shadow-sm';
+      } else {
+        btn.className = 'w-8 h-8 text-xs font-bold rounded flex items-center justify-center transition bg-gray-800 text-gray-300 border border-gray-600 hover:bg-gray-700';
+      }
+    }
+
+    // --- 3. IELTS Text Highlighting Engine ---
+    let currentSelectionRange = null;
+
+    document.addEventListener('contextmenu', (e) => {
+      const selectedText = window.getSelection().toString().trim();
+      
+      if (selectedText.length > 0 || e.target.classList.contains('ielts-highlight')) {
+        e.preventDefault();
+        
+        const selection = window.getSelection();
+        if (selection.rangeCount > 0) {
+          currentSelectionRange = selection.getRangeAt(0);
+        }
+
+        contextMenu.style.top = `${e.pageY}px`;
+        contextMenu.style.left = `${e.pageX}px`;
+        contextMenu.style.display = 'block';
+      } else {
+        contextMenu.style.display = 'none';
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#context-menu')) {
+        contextMenu.style.display = 'none';
+      }
+    });
+
+    document.getElementById('menu-highlight').addEventListener('click', () => {
+      contextMenu.style.display = 'none';
+      if (!currentSelectionRange) return;
+
+      try {
+        const span = document.createElement('span');
+        span.className = 'ielts-highlight';
+        currentSelectionRange.surroundContents(span);
+      } catch (err) {
+        console.log('Highlight error:', err);
+      }
+      window.getSelection().removeAllRanges();
+    });
+
+    document.getElementById('menu-clear').addEventListener('click', () => {
+      contextMenu.style.display = 'none';
+      const selection = window.getSelection();
+      
+      if (selection.anchorNode) {
+        let node = selection.anchorNode.parentElement;
+        while (node && !node.classList.contains('ielts-highlight') && node !== document.body) {
+          node = node.parentElement;
+        }
+
+        if (node && node.classList.contains('ielts-highlight')) {
+          const parent = node.parentNode;
+          while (node.firstChild) {
+            parent.insertBefore(node.firstChild, node);
+          }
+          parent.removeChild(node);
+        }
+      }
+    });
+
+    // High Contrast Toggle
+    document.getElementById('toggle-contrast').addEventListener('click', () => {
+      document.body.classList.toggle('invert');
+    });
+
+    // Initialize Page
+    window.onload = function() {
+      initNavigation();
+    };
+  </script>
+</body>
+</html>
