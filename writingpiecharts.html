@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IELTS Computer-Based Exam - Academic Writing Part 1</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Arial:wght@400;700&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      user-select: text;
+      overflow: hidden;
+      background-color: #f4f4f4;
+    }
+
+    /* Official IELTS Text Highlight */
+    .ielts-highlight {
+      background-color: #ffeb3b !important;
+      color: #000000 !important;
+      padding: 0 1px;
+    }
+
+    /* Custom Scrollbars for Authentic Exam Feel */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #a8a8a8;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #787878;
+    }
+
+    /* Split Screen Resizer Bar */
+    #resizer {
+      width: 10px;
+      background-color: #d1d5db;
+      cursor: col-resize;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      z-index: 20;
+      transition: background-color 0.2s;
+    }
+    #resizer:hover, #resizer.dragging {
+      background-color: #9ca3af;
+    }
+    #resizer::after {
+      content: '↔';
+      color: #374151;
+      font-size: 14px;
+      font-weight: bold;
+      background: #e5e7eb;
+      padding: 4px 1px;
+      border: 1px solid #9ca3af;
+      border-radius: 2px;
+    }
+
+    /* IELTS Context Menu */
+    #context-menu {
+      display: none;
+      position: absolute;
+      z-index: 1000;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+  </style>
+</head>
+<body class="h-screen w-screen flex flex-col justify-between text-gray-900 select-none overflow-hidden">
+
+  <!-- Header Bar -->
+  <header class="bg-white border-b border-gray-300 px-6 py-2 flex justify-between items-center h-14 shrink-0 shadow-sm z-30">
+    <div class="flex items-center space-x-6">
+      <div class="flex items-center gap-1">
+        <span class="text-red-600 font-bold text-2xl tracking-tighter">IELTS</span>
+        <sup class="text-[10px] font-bold text-red-600">™</sup>
+      </div>
+      <div class="text-sm font-semibold text-gray-700 border-l border-gray-300 pl-4">
+        Test taker ID: <span class="font-normal text-gray-900">482019 - SMITH, ALEX</span>
+      </div>
+    </div>
+
+    <!-- Timer & Control Icons -->
+    <div class="flex items-center space-x-6">
+      <!-- 60-Minute Countdown Timer -->
+      <div class="flex items-center bg-gray-100 px-3 py-1 rounded border border-gray-300">
+        <svg class="w-4 h-4 text-gray-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <span id="timer-display" class="font-mono font-bold text-base text-gray-800">60:00</span>
+        <span class="text-xs text-gray-500 ml-1">remaining</span>
+      </div>
+
+      <!-- Action Utilities Icons (Wifi, Bell, Menu, Help) -->
+      <div class="flex items-center space-x-4 text-gray-600">
+        <!-- Wifi icon -->
+        <svg class="w-5 h-5 cursor-pointer hover:text-gray-900" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M2 11a1 1 0 011-1 8 8 0 0114 0 1 1 0 11-2 0 6 6 0 00-10 0 1 1 0 01-2 0z"></path>
+          <path d="M6 13a1 1 0 011-1 4 4 0 016 0 1 1 0 11-2 0 2 2 0 00-2 0 1 1 0 01-3 0z"></path>
+          <path d="M10 15a1 1 0 100 2 1 1 0 000-2z"></path>
+        </svg>
+        <!-- Notification icon -->
+        <svg class="w-5 h-5 cursor-pointer hover:text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+        </svg>
+        <!-- Hamburger Menu -->
+        <svg class="w-5 h-5 cursor-pointer hover:text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+        <!-- Pencil/Notes -->
+        <svg class="w-5 h-5 cursor-pointer hover:text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+        </svg>
+      </div>
+    </div>
+  </header>
+
+  <!-- Task Header Banner -->
+  <div class="bg-[#eef2f5] border-b border-gray-300 px-6 py-2.5 shrink-0">
+    <h1 class="text-sm font-bold text-gray-900">Part 1</h1>
+    <p class="text-xs text-gray-700">You should spend about 20 minutes on this task. Write at least 150 words.</p>
+  </div>
+
+  <!-- Main Work Area Split Screen -->
+  <div id="split-container" class="flex-grow flex overflow-hidden bg-white relative">
+    
+    <!-- LEFT PANE: Task Prompt & Pie Charts Graphics -->
+    <div id="left-pane" class="w-1/2 h-full overflow-y-auto p-6 border-r border-gray-200">
+      
+      <!-- Prompt Statement -->
+      <div class="space-y-3 mb-6">
+        <p class="text-sm font-bold text-gray-900 leading-relaxed select-text">
+          The charts below show the percentage of household energy use by type, and the proportion of greenhouse gas emissions resulting from this energy use in Australia.
+        </p>
+        <p class="text-sm font-bold text-gray-900 leading-relaxed select-text">
+          Summarise the information by selecting and reporting the main features, and make comparisons where relevant.
+        </p>
+      </div>
+
+      <!-- Visual Pie Charts Container -->
+      <div class="bg-gray-50 border border-gray-200 rounded p-4 space-y-8">
+        
+        <!-- Legend Component -->
+        <div class="bg-white p-3 rounded border border-gray-200 shadow-sm">
+          <h3 class="text-xs font-bold text-gray-700 mb-2 uppercase tracking-wide">Categories</h3>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
+            <div class="flex items-center space-x-1.5"><span class="w-3.5 h-3.5 inline-block rounded-sm bg-[#3b82f6]"></span><span>Heating</span></div>
+            <div class="flex items-center space-x-1.5"><span class="w-3.5 h-3.5 inline-block rounded-sm bg-[#ef4444]"></span><span>Water heating</span></div>
+            <div class="flex items-center space-x-1.5"><span class="w-3.5 h-3.5 inline-block rounded-sm bg-[#eab308]"></span><span>Other appliances</span></div>
+            <div class="flex items-center space-x-1.5"><span class="w-3.5 h-3.5 inline-block rounded-sm bg-[#22c55e]"></span><span>Refrigerators</span></div>
+            <div class="flex items-center space-x-1.5"><span class="w-3.5 h-3.5 inline-block rounded-sm bg-[#a855f7]"></span><span>Lighting</span></div>
+            <div class="flex items-center space-x-1.5"><span class="w-3.5 h-3.5 inline-block rounded-sm bg-[#06b6d4]"></span><span>Cooling</span></div>
+          </div>
+        </div>
+
+        <!-- Chart 1: Household Energy Use -->
+        <div class="flex flex-col items-center">
+          <h4 class="text-sm font-bold text-center text-gray-800 mb-3">Australian Household Energy Use</h4>
+          
+          <svg viewBox="0 0 200 200" class="w-64 h-64 drop-shadow">
+            <!-- Heating 42% -->
+            <path d="M 100 100 L 100 10 A 90 90 0 0 1 179.9 141.5 Z" fill="#3b82f6" stroke="#fff" stroke-width="1.5"/>
+            <!-- Water heating 30% -->
+            <path d="M 100 100 L 179.9 141.5 A 90 90 0 0 1 26.6 152.9 Z" fill="#ef4444" stroke="#fff" stroke-width="1.5"/>
+            <!-- Other appliances 15% -->
+            <path d="M 100 100 L 26.6 152.9 A 90 90 0 0 1 12.1 72.2 Z" fill="#eab308" stroke="#fff" stroke-width="1.5"/>
+            <!-- Refrigerators 7% -->
+            <path d="M 100 100 L 12.1 72.2 A 90 90 0 0 1 28.9 44.7 Z" fill="#22c55e" stroke="#fff" stroke-width="1.5"/>
+            <!-- Lighting 4% -->
+            <path d="M 100 100 L 28.9 44.7 A 90 90 0 0 1 47.1 27.2 Z" fill="#a855f7" stroke="#fff" stroke-width="1.5"/>
+            <!-- Cooling 2% -->
+            <path d="M 100 100 L 47.1 27.2 A 90 90 0 0 1 100 10 Z" fill="#06b6d4" stroke="#fff" stroke-width="1.5"/>
+
+            <!-- Percentage Labels -->
+            <text x="135" y="60" fill="#fff" font-size="10" font-weight="bold">42%</text>
+            <text x="110" y="150" fill="#fff" font-size="10" font-weight="bold">30%</text>
+            <text x="40" y="125" fill="#fff" font-size="10" font-weight="bold">15%</text>
+            <text x="35" y="62" fill="#fff" font-size="9" font-weight="bold">7%</text>
+            <text x="52" y="40" fill="#fff" font-size="8" font-weight="bold">4%</text>
+            <text x="80" y="24" fill="#fff" font-size="7" font-weight="bold">2%</text>
+          </svg>
+        </div>
+
+        <!-- Chart 2: Greenhouse Gas Emissions -->
+        <div class="flex flex-col items-center pt-4 border-t border-gray-300">
+          <h4 class="text-sm font-bold text-center text-gray-800 mb-3">Greenhouse Gas Emissions Resulting from Household Energy Use</h4>
+          
+          <svg viewBox="0 0 200 200" class="w-64 h-64 drop-shadow">
+            <!-- Water heating 32% -->
+            <path d="M 100 100 L 100 10 A 90 90 0 0 1 181.1 139.1 Z" fill="#ef4444" stroke="#fff" stroke-width="1.5"/>
+            <!-- Other appliances 28% -->
+            <path d="M 100 100 L 181.1 139.1 A 90 90 0 0 1 11.8 116.5 Z" fill="#eab308" stroke="#fff" stroke-width="1.5"/>
+            <!-- Heating 15% -->
+            <path d="M 100 100 L 11.8 116.5 A 90 90 0 0 1 26.6 47.1 Z" fill="#3b82f6" stroke="#fff" stroke-width="1.5"/>
+            <!-- Refrigerators 14% -->
+            <path d="M 100 100 L 26.6 47.1 A 90 90 0 0 1 73.1 14.1 Z" fill="#22c55e" stroke="#fff" stroke-width="1.5"/>
+            <!-- Lighting 8% -->
+            <path d="M 100 100 L 73.1 14.1 A 90 90 0 0 1 93.3 10.3 Z" fill="#a855f7" stroke="#fff" stroke-width="1.5"/>
+            <!-- Cooling 3% -->
+            <path d="M 100 100 L 93.3 10.3 A 90 90 0 0 1 100 10 Z" fill="#06b6d4" stroke="#fff" stroke-width="1.5"/>
+
+            <!-- Percentage Labels -->
+            <text x="135" y="65" fill="#fff" font-size="10" font-weight="bold">32%</text>
+            <text x="100" y="155" fill="#fff" font-size="10" font-weight="bold">28%</text>
+            <text x="35" y="90" fill="#fff" font-size="10" font-weight="bold">15%</text>
+            <text x="48" y="42" fill="#fff" font-size="9" font-weight="bold">14%</text>
+            <text x="80" y="24" fill="#fff" font-size="8" font-weight="bold">8%</text>
+            <text x="94" y="20" fill="#fff" font-size="6" font-weight="bold">3%</text>
+          </svg>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- RESIZABLE DIVIDER HANDLE -->
+    <div id="resizer"></div>
+
+    <!-- RIGHT PANE: Essay Writing Area -->
+    <div id="right-pane" class="w-1/2 h-full flex flex-col p-6 bg-white overflow-hidden">
+      <div class="flex-grow flex flex-col relative">
+        <textarea 
+          id="essay-textarea" 
+          class="w-full flex-grow p-4 border border-gray-400 rounded-sm focus:outline-none focus:border-gray-600 resize-none font-sans text-base leading-relaxed text-gray-800"
+          placeholder="Type your answer here..."
+          spellcheck="false"
+        ></textarea>
+
+        <!-- Live Word Counter Indicator -->
+        <div class="py-2 flex justify-between items-center text-sm text-gray-600">
+          <div></div>
+          <div class="font-bold text-gray-800">
+            Words: <span id="word-count">0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer Navigation Bar -->
+  <footer class="bg-[#e0e0e0] border-t border-gray-300 h-12 flex justify-between items-center px-6 shrink-0 shadow-inner">
+    
+    <!-- Part Switcher -->
+    <div class="flex items-center space-x-8 text-sm font-bold text-gray-700">
+      <div class="flex items-center space-x-2 cursor-pointer text-black border-b-2 border-black pb-0.5">
+        <span>Part 1</span>
+      </div>
+      <div class="flex items-center space-x-2 text-gray-500 hover:text-gray-800 cursor-pointer">
+        <span>Part 2</span>
+        <span class="text-xs font-normal text-gray-400">(0 of 1)</span>
+      </div>
+    </div>
+
+    <!-- Navigation Arrows & Complete Check -->
+    <div class="flex items-center space-x-2">
+      <button class="w-10 h-8 bg-gray-300 hover:bg-gray-400 text-gray-700 rounded flex items-center justify-center transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path>
+        </svg>
+      </button>
+      <button class="w-10 h-8 bg-black hover:bg-gray-800 text-white rounded flex items-center justify-center transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+        </svg>
+      </button>
+      <button class="w-10 h-8 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded flex items-center justify-center border border-gray-400 transition ml-2">
+        <svg class="w-5 h-5 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+        </svg>
+      </button>
+    </div>
+
+  </footer>
+
+  <!-- Context Menu for Text Highlighting -->
+  <div id="context-menu" class="bg-white border border-gray-300 rounded shadow-lg py-1 w-36 text-sm">
+    <button id="menu-highlight" class="w-full text-left px-4 py-2 hover:bg-yellow-100 flex items-center gap-2 text-gray-800">
+      <span class="w-3.5 h-3.5 bg-yellow-400 rounded-full border border-yellow-500 inline-block"></span>
+      Highlight
+    </button>
+    <button id="menu-clear" class="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center gap-2 text-gray-700 border-t border-gray-100">
+      <svg class="w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+      </svg>
+      Clear Highlight
+    </button>
+  </div>
+
+  <script>
+    // --- 1. 60-Minute Countdown Timer ---
+    let totalSeconds = 60 * 60; // 60 minutes
+    const timerDisplay = document.getElementById('timer-display');
+
+    function updateTimer() {
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+      timerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+      
+      if (totalSeconds > 0) {
+        totalSeconds--;
+      } else {
+        clearInterval(timerInterval);
+        timerDisplay.classList.add('text-red-600');
+      }
+    }
+
+    const timerInterval = setInterval(updateTimer, 1000);
+
+    // --- 2. Real-time Word Counter ---
+    const textarea = document.getElementById('essay-textarea');
+    const wordCountDisplay = document.getElementById('word-count');
+
+    textarea.addEventListener('input', () => {
+      const text = textarea.value.trim();
+      const words = text ? text.split(/\s+/).filter(w => w.length > 0) : [];
+      wordCountDisplay.textContent = words.length;
+    });
+
+    // --- 3. Split Screen Resizer Logic ---
+    const resizer = document.getElementById('resizer');
+    const leftPane = document.getElementById('left-pane');
+    const rightPane = document.getElementById('right-pane');
+    const splitContainer = document.getElementById('split-container');
+
+    let isDragging = false;
+
+    resizer.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      resizer.classList.add('dragging');
+      document.body.style.cursor = 'col-resize';
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      
+      const containerRect = splitContainer.getBoundingClientRect();
+      let newLeftWidth = e.clientX - containerRect.left;
+      
+      // Keep boundaries between 25% and 75%
+      const minWidth = containerRect.width * 0.25;
+      const maxWidth = containerRect.width * 0.75;
+      
+      if (newLeftWidth < minWidth) newLeftWidth = minWidth;
+      if (newLeftWidth > maxWidth) newLeftWidth = maxWidth;
+
+      const leftPercent = (newLeftWidth / containerRect.width) * 100;
+      leftPane.style.width = `${leftPercent}%`;
+      rightPane.style.width = `${100 - leftPercent}%`;
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (isDragging) {
+        isDragging = false;
+        resizer.classList.remove('dragging');
+        document.body.style.cursor = 'default';
+      }
+    });
+
+    // --- 4. IELTS Text Highlighting Engine ---
+    const contextMenu = document.getElementById('context-menu');
+    let currentSelectionRange = null;
+
+    document.addEventListener('contextmenu', (e) => {
+      const selectedText = window.getSelection().toString().trim();
+      
+      if (selectedText.length > 0 || e.target.classList.contains('ielts-highlight')) {
+        e.preventDefault();
+        
+        const selection = window.getSelection();
+        if (selection.rangeCount > 0) {
+          currentSelectionRange = selection.getRangeAt(0);
+        }
+
+        contextMenu.style.top = `${e.pageY}px`;
+        contextMenu.style.left = `${e.pageX}px`;
+        contextMenu.style.display = 'block';
+      } else {
+        contextMenu.style.display = 'none';
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#context-menu')) {
+        contextMenu.style.display = 'none';
+      }
+    });
+
+    document.getElementById('menu-highlight').addEventListener('click', () => {
+      contextMenu.style.display = 'none';
+      if (!currentSelectionRange) return;
+
+      try {
+        const span = document.createElement('span');
+        span.className = 'ielts-highlight';
+        currentSelectionRange.surroundContents(span);
+      } catch (err) {
+        console.log('Highlighting error:', err);
+      }
+      window.getSelection().removeAllRanges();
+    });
+
+    document.getElementById('menu-clear').addEventListener('click', () => {
+      contextMenu.style.display = 'none';
+      const selection = window.getSelection();
+      
+      if (selection.anchorNode) {
+        let node = selection.anchorNode.parentElement;
+        while (node && !node.classList.contains('ielts-highlight') && node !== document.body) {
+          node = node.parentElement;
+        }
+
+        if (node && node.classList.contains('ielts-highlight')) {
+          const parent = node.parentNode;
+          while (node.firstChild) {
+            parent.insertBefore(node.firstChild, node);
+          }
+          parent.removeChild(node);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
