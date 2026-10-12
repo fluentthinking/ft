@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IELTS Computer-Delivered Test - Reading Section 3</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Arial:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      user-select: text;
+      overflow: hidden;
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+    /* High Contrast Dark Theme Support */
+    body.high-contrast {
+      background-color: #000000 !important;
+      color: #ffff00 !important;
+    }
+    body.high-contrast header, 
+    body.high-contrast footer,
+    body.high-contrast .banner-bar,
+    body.high-contrast #left-pane,
+    body.high-contrast #right-pane,
+    body.high-contrast .options-box {
+      background-color: #000000 !important;
+      color: #ffff00 !important;
+      border-color: #ffff00 !important;
+    }
+    body.high-contrast input[type="radio"],
+    body.high-contrast select {
+      filter: invert(1);
+    }
+    body.high-contrast .q-card {
+      border-color: #ffff00 !important;
+      background-color: #111111 !important;
+    }
+
+    /* Authentic IELTS Text Highlight */
+    .ielts-highlight {
+      background-color: #ffff00 !important;
+      color: #000000 !important;
+      padding: 0 1px;
+    }
+
+    /* Scrollbars matching IELTS exam format */
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #e0e0e0;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #888888;
+      border-radius: 0px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #555555;
+    }
+
+    /* Split Screen Drag Handle */
+    #resizer {
+      width: 12px;
+      background-color: #7f7f7f;
+      cursor: col-resize;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      z-index: 30;
+      transition: background-color 0.15s;
+    }
+    #resizer:hover, #resizer.dragging {
+      background-color: #333333;
+    }
+    #resizer-button {
+      background: #ffffff;
+      border: 1px solid #000000;
+      padding: 6px 1px;
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* IELTS Context Menu */
+    #context-menu {
+      display: none;
+      position: absolute;
+      z-index: 1000;
+      background-color: #ffffff;
+      border: 1px solid #666666;
+      box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Radio Inputs Custom Styling for Exam Look */
+    .ielts-radio-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      padding: 3px 0;
+      font-size: 14px;
+    }
+    .ielts-radio-label:hover {
+      background-color: #f5f5f5;
+    }
+    body.high-contrast .ielts-radio-label:hover {
+      background-color: #222222;
+    }
+
+    .q-number-box {
+      border: 2px solid #000000;
+      font-weight: bold;
+      padding: 1px 6px;
+      display: inline-block;
+      margin-right: 6px;
+      background-color: #ffffff;
+      color: #000000;
+    }
+    body.high-contrast .q-number-box {
+      border-color: #ffff00;
+      background-color: #000000;
+      color: #ffff00;
+    }
+  </style>
+</head>
+<body class="h-screen w-screen flex flex-col justify-between overflow-hidden">
+
+  <!-- Header Bar -->
+  <header class="bg-white border-b-2 border-gray-300 px-6 py-2 flex justify-between items-center h-14 shrink-0 z-40">
+    <!-- IELTS Logo & Candidate Information -->
+    <div class="flex items-center space-x-6">
+      <div class="flex items-center gap-0.5">
+        <span class="text-[#d32f2f] font-bold text-2xl tracking-tighter">IELTS</span>
+        <sup class="text-[9px] font-bold text-[#d32f2f] ml-0.5">™</sup>
+      </div>
+      <div class="text-sm font-bold text-gray-800 border-l border-gray-400 pl-4">
+        Test taker ID: <span class="font-normal text-black">391084 - JOHNSON, ALEX</span>
+      </div>
+    </div>
+
+    <!-- Timer & Control Icons -->
+    <div class="flex items-center space-x-6">
+      <!-- High Contrast Toggle Button -->
+      <button id="contrast-toggle" class="text-xs bg-gray-100 border border-gray-400 px-2.5 py-1 font-semibold hover:bg-gray-200">
+        Change Contrast
+      </button>
+
+      <!-- 60-Minute Countdown Timer -->
+      <div class="flex items-center bg-gray-100 px-3 py-1 border border-gray-300">
+        <svg class="w-4 h-4 text-gray-700 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <span id="timer-display" class="font-mono font-bold text-base text-gray-900">60:00</span>
+        <span class="text-xs text-gray-600 ml-1">left</span>
+      </div>
+
+      <!-- Action Utilities Icons (Wifi, Bell, Menu, Help/Pencil) -->
+      <div class="flex items-center space-x-4 text-gray-700">
+        <!-- Wifi icon -->
+        <svg class="w-5 h-5 cursor-pointer hover:text-black" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M2 11a1 1 0 011-1 8 8 0 0114 0 1 1 0 11-2 0 6 6 0 00-10 0 1 1 0 01-2 0z"></path>
+          <path d="M6 13a1 1 0 011-1 4 4 0 016 0 1 1 0 11-2 0 2 2 0 00-2 0 1 1 0 01-3 0z"></path>
+          <path d="M10 15a1 1 0 100 2 1 1 0 000-2z"></path>
+        </svg>
+        <!-- Bell Notification icon -->
+        <svg class="w-5 h-5 cursor-pointer hover:text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+        </svg>
+        <!-- Hamburger Menu -->
+        <svg class="w-5 h-5 cursor-pointer hover:text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+        <!-- Pencil / Notes Icon -->
+        <svg class="w-5 h-5 cursor-pointer hover:text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+        </svg>
+      </div>
+    </div>
+  </header>
+
+  <!-- Instructions Banner -->
+  <div class="banner-bar bg-[#ebebeb] border-b border-gray-300 px-6 py-2.5 shrink-0">
+    <h1 class="text-sm font-bold text-black">Part 3</h1>
+    <p class="text-xs text-gray-800">Read the text and answer questions 27–40.</p>
+  </div>
+
+  <!-- Main Work Area Split Screen -->
+  <div id="split-container" class="flex-grow flex overflow-hidden bg-white relative">
+    
+    <!-- LEFT PANE: Reading Passage -->
+    <div id="left-pane" class="w-1/2 h-full overflow-y-auto p-6 pr-8 select-text leading-relaxed border-r border-gray-300">
+      <h2 class="text-xl font-bold text-black mb-4">Is there more to video games than people realize ?</h2>
+      
+      <div class="space-y-4 text-sm text-gray-900 leading-normal">
+        <p>
+          Many people who spend a lot of time playing video games insist that they have helped them in areas like confidence-building, presentation skills and debating. Yet this way of thinking about video games can be found almost nowhere within the mainstream media, which still tend to treat games as an odd mix of the slightly menacing and the alien. This lack of awareness has become increasingly inappropriate, as video games and the culture that surrounds them have become very big business indeed.
+        </p> <p> Recently, the British government released
+the Byron report into the effects of electronic
+media on children. Its conclusions set out a
+clear, rational basis for explorinq the regulation
+of video games. The ensuing debate, however,
+has descended into the same old squabbling
+between partisan factions: the preachers of
+mental and moral decline, and the innovative
+game designers. In between are the gamers,
+busily buying and playing while nonsense is
+talked over their heads.</p> <p> Susan Greenfield, renowned neuroscientist,
+outlines her concerns in a new book. Every
+individual's mind is the product of a brain that
+has been personalised by the sum total of
+their experiences; with an increasing quantity
+of our experiences from very early childhood
+taking place 'on screen' rather than in the world,
+there is potentially a profound shift in the way children's minds work. She suggests that the
+fast-paced, second-hand experiences created
+by video games and the Internet may inculcate
+a worldview that is less empathetic, more risktaking and less contemplative than what we
+tend to think of as healthy.</p> <p> Greenfield's prose is full of mixed metaphors
+and self-contradictions and is perhaps the
+worst enemy of her attempts to persuade.
+This is unfortunate, because however much
+technophiles may snort, she is articulating
+widely held fears that have a basis in fact.
+Unlike even their immediate antecedents, the
+latest electronic media are at once domestic
+and work-related, their mobility blurring the
+boundaries between these spaces, and video
+games are at their forefront. A generational
+divide has opened that is in many ways more
+profound than the equivalent shifts associated
+with radio or television, more alienating for
+those unfamiliar with new technologies, more
+absorbing for those who are. So how do our
+lawmakers regulate something that is too fluid
+to be fully comprehended or controlled? </p> <p> Adam Martin, a lead programmer for an on line
+games developer, says: 'Computer games teach
+and people don't even notice they're being
+taught.' But isn't the kind of learning that goes
+on in games rather narrow? 'A large part of the I
+addictiveness of games does come from the
+fact that as you play you are mastering a set of challenges.But humanity's larger understanding
+of the world comes primarily through
+communication and experimentation, through
+answering the question "What if?" Games excel
+at teaching this too.</p> <p> Steven Johnson's thesis is not that electronic
+games constitute a great,popular art.but that the
+mean level of massculture has been demanding
+steadily more intellectual engagement from
+consumers. Garnes, he points out, generate
+satisfaction via the complexity of their virtual
+worlds, not by their robotic predictability.
+Testing the nature and limits of the laws of
+such imaginary worlds has more in common
+with scientific methods than with a pointless
+addiction, while the complexity of the problems
+children encounter within games exceeds that
+of anything they might find at school.</p> <p> Greenfield argues that there are ways of thinking
+that playing video games simply cannot teach.
+She has a point. We should never forget, for
+instance, the unique ability of books to engage
+and expand the human imagination, and to
+give us the means of more fully expressing our
+situations in the world. Intriguingly, the video
+games industry is now growing in ways that have
+more in common with an old-fashioned world
+of companionable pastimes than with a cyberfuture of lonely, isolated obsessives. Games
+in which friends and relations gather round a
+console to compete at activities are growing in
+popularity. The agenda is increasingly being set
+by the concerns of mainstream consumers -
+what they consider acceptable for their children, what they want to play at parties and across
+generations.</p> <p> These trends embody a familiar but important
+truth: games are human products, and lie
+within our control. This doesn't mean we yet
+control or understand them fully, but it should
+remind us that there is nothing inevitable or
+incomprehensible about them. No matter
+how deeply it may be felt, instinctive fear rs an
+inappropriate response to technology of any
+kind.</p> <p> So far, the dire predictions many traditionalists
+have made about the 'death' of old-fashioned
+narratives and imaginative thought at the hands
+of video games cannot be upheld. Television and
+cinema may be suffering, economically, at the
+hands of interactive media. But literacy standards
+have failed to decline. Young people still enjoy
+sport, going out and listening to music. And most
+research - including a recent $1.Sm study funded
+by the US government - suggests that even preteens are not in the habit of blurring game worlds
+and real worlds. </p> <p>The sheer pace and scale of the changes we
+face, however, leave little room for complacency.
+Richard Bartle, a British writer and game
+researcher, says 'Times change: accept it;
+embrace it.' Just as, today, we have no living
+memories of a time before radio, we will soon live
+in a world in which no one living experienced
+growing up without computers. It is for this
+reason that we must try to examine what we
+· stand to lose and gain, before it is too late. </p>
+      </div>
+    </div>
+
+    <!-- RESIZABLE DIVIDER HANDLE -->
+    <div id="resizer">
+      <div id="resizer-button">
+        <svg class="w-3 h-4 text-gray-800" fill="currentColor" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+        </svg>
+        <svg class="w-3 h-4 text-gray-800" fill="currentColor" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- RIGHT PANE: Questions Area -->
+    <div id="right-pane" class="w-1/2 h-full overflow-y-auto p-6 select-text space-y-8 bg-white">
+      
+      <!-- Questions 27–32 Header -->
+      <section id="section-27-32" class="space-y-4">
+        <div class="border-b-2 border-black pb-2">
+          <h3 class="font-bold text-base text-black">Questions 27–32</h3>
+          <p class="text-xs text-gray-800 mt-1">
+            Do the following statements agree with the views of the writer in Reading Passage 3?
+          </p>
+          <p class="text-xs italic text-gray-800 mt-0.5">
+            In boxes 27–32 on your answer sheet, choose:
+          </p>
+          <div class="text-xs space-y-0.5 mt-2 pl-2 border-l-2 border-gray-400 font-mono">
+            <div><span class="font-bold">YES</span> if the statement agrees with the views of the writer</div>
+            <div><span class="font-bold">NO</span> if the statement contradicts the views of the writer</div>
+            <div><span class="font-bold">NOT GIVEN</span> if it is impossible to say what the writer thinks about this</div>
+          </div>
+        </div>
+
+        <!-- Question 27 -->
+        <div class="q-card p-3 border border-gray-300 rounded-sm space-y-2" id="q-container-27">
+          <div class="text-sm font-normal text-black flex items-start">
+            <span class="q-number-box">27</span>
+            <span>Much media comment ignores the impact that video games can have on many people's lives.</span>
+          </div>
+          <div class="pl-8 space-y-1">
+            <label class="ielts-radio-label"><input type="radio" name="q27" value="YES" onchange="updateQState(27, this.value)"> YES</label>
+            <label class="ielts-radio-label"><input type="radio" name="q27" value="NO" onchange="updateQState(27, this.value)"> NO</label>
+            <label class="ielts-radio-label"><input type="radio" name="q27" value="NOT GIVEN" onchange="updateQState(27, this.value)"> NOT GIVEN</label>
+          </div>
+        </div>
+
+        <!-- Question 28 -->
+        <div class="q-card p-3 border border-gray-300 rounded-sm space-y-2" id="q-container-28">
+          <div class="text-sm font-normal text-black flex items-start">
+            <span class="q-number-box">28</span>
+            <span>The publication of the Byron Report was followed by a worthwhile discussion between those for and against video games.</span>
+          </div>
+          <div class="pl-8 space-y-1">
+            <label class="ielts-radio-label"><input type="radio" name="q28" value="YES" onchange="updateQState(28, this.value)"> YES</label>
+            <label class="ielts-radio-label"><input type="radio" name="q28" value="NO" onchange="updateQState(28, this.value)"> NO</label>
+            <label class="ielts-radio-label"><input type="radio" name="q28" value="NOT GIVEN" onchange="updateQState(28, this.value)"> NOT GIVEN</label>
+          </div>
+        </div>
+
+        <!-- Question 29 -->
+        <div class="q-card p-3 border border-gray-300 rounded-sm space-y-2" id="q-container-29">
+          <div class="text-sm font-normal text-black flex items-start">
+            <span class="q-number-box">29</span>
+            <span>Susan Greenfield's way of writing has become more complex over the years.</span>
+          </div>
+          <div class="pl-8 space-y-1">
+            <label class="ielts-radio-label"><input type="radio" name="q29" value="YES" onchange="updateQState(29, this.value)"> YES</label>
+            <label class="ielts-radio-label"><input type="radio" name="q29" value="NO" onchange="updateQState(29, this.value)"> NO</label>
+            <label class="ielts-radio-label"><input type="radio" name="q29" value="NOT GIVEN" onchange="updateQState(29, this.value)"> NOT GIVEN</label>
+          </div>
+        </div>
+
+        <!-- Question 30 -->
+        <div class="q-card p-3 border border-gray-300 rounded-sm space-y-2" id="q-container-30">
+          <div class="text-sm font-normal text-black flex items-start">
+            <span class="q-number-box">30</span>
+            <span>It is likely that video games will take over the role of certain kinds of books in the future.</span>
+          </div>
+          <div class="pl-8 space-y-1">
+            <label class="ielts-radio-label"><input type="radio" name="q30" value="YES" onchange="updateQState(30, this.value)"> YES</label>
+            <label class="ielts-radio-label"><input type="radio" name="q30" value="NO" onchange="updateQState(30, this.value)"> NO</label>
+            <label class="ielts-radio-label"><input type="radio" name="q30" value="NOT GIVEN" onchange="updateQState(30, this.value)"> NOT GIVEN</label>
+          </div>
+        </div>
+
+        <!-- Question 31 -->
+        <div class="q-card p-3 border border-gray-300 rounded-sm space-y-2" id="q-container-31">
+          <div class="text-sm font-normal text-black flex items-start">
+            <span class="q-number-box">31</span>
+            <span>More sociable games are being brought out to satisfy the demands of the buying public.</span>
+          </div>
+          <div class="pl-8 space-y-1">
+            <label class="ielts-radio-label"><input type="radio" name="q31" value="YES" onchange="updateQState(31, this.value)"> YES</label>
+            <label class="ielts-radio-label"><input type="radio" name="q31" value="NO" onchange="updateQState(31, this.value)"> NO</label>
+            <label class="ielts-radio-label"><input type="radio" name="q31" value="NOT GIVEN" onchange="updateQState(31, this.value)"> NOT GIVEN</label>
+          </div>
+        </div>
+
+        <!-- Question 32 -->
+        <div class="q-card p-3 border border-gray-300 rounded-sm space-y-2" id="q-container-32">
+          <div class="text-sm font-normal text-black flex items-start">
+            <span class="q-number-box">32</span>
+            <span>Being afraid of technological advances is a justifiable reaction.</span>
+          </div>
+          <div class="pl-8 space-y-1">
+            <label class="ielts-radio-label"><input type="radio" name="q32" value="YES" onchange="updateQState(32, this.value)"> YES</label>
+            <label class="ielts-radio-label"><input type="radio" name="q32" value="NO" onchange="updateQState(32, this.value)"> NO</label>
+            <label class="ielts-radio-label"><input type="radio" name="q32" value="NOT GIVEN" onchange="updateQState(32, this.value)"> NOT GIVEN</label>
+          </div>
+        </div>
+      </section>
+
+      <!-- Questions 33–37 Header -->
+      <section id="section-33-37" class="space-y-4 pt-4 border-t-2 border-black">
+        <div>
+          <h3 class="font-bold text-base text-black">Questions 33–37</h3>
+          <p class="text-xs text-gray-800 mt-1">
+            Choose the correct letter, <span class="font-bold">A, B, C or D</span>.
+          </p>
+        </div>
+
+        <!-- Question 33 -->
+        <div class="q-card p-3 border border-gray-300 rounded-sm space-y-2" id="q-container-33">
+          <div class="text-sm font-normal text-black flex items-start">
+            <span class="q-number-box">33</span>
+            <span>According to the writer, what view about video games does Susan Greenfield put forward in her new book?</span>
+          </div>
+          <div class="pl-8 space-y-1">
+            <label class="ielts-radio-label"><input type="radio" name="q33" value="A" onchange="updateQState(33, this.value)"> A. They are exposing a child to an adult view of the world too soon.</label>
+            <label class="ielts-radio-label"><input type="radio" name="q33" value="B" onchange="updateQState(33, this.value)"> B. Children become easily frightened by some of the situations in them.</label>
+            <label class="ielts-radio-label"><input type="radio" name="q33" value="C" onchange="updateQState(33, this.value)"> C. They are changing the way children's view of the world develops.</label>
+            <label class="ielts-radio-label"><input type="radio" name="q33" value="D" onchange="updateQState(33, this.value)"> D. Children don't learn from them because they are too repetitive.</label>
+          </div>
+        </div>
+
+        <!-- Question 34 -->
+        <div class="q-card p-3 border border-gray-300 rounded-sm space-y-2" id="q-container-34">
+          <div class="text-sm font-normal text-black flex items-start">
+            <span class="q-number-box">34</span>
+            <span>According to the writer, what problems are faced when regulating video games?</span>
+          </div>
+          <div class="pl-8 space-y-1">
+            <label class="ielts-radio-label"><input type="radio" name="q34" value="A" onchange="updateQState(34, this.value)"> A. The widespread and ever-changing use of games makes it difficult for lawmakers to control them.</label>
+            <label class="ielts-radio-label"><input type="radio" name="q34" value="B" onchange="updateQState(34, this.value)"> B. The appeal of the games to a younger generation isn't really understood by many lawmakers.</label>
+            <label class="ielts-radio-label"><input type="radio" name="q34" value="C" onchange="updateQState(34, this.value)"> C. The lawmakers try to apply the same rules to the games as they did to radio and television.</label>
+            <label class="ielts-radio-label"><input type="radio" name="q34" value="D" onchange="updateQState(34, this.value)"> D. Many lawmakers feel it is too late for the regulations to have much effect on the use of games.</label>
+          </div>
+        </div>
+
+        <!-- Question 35 -->
+        <div class="q-card p-3 border border-gray-300 rounded-sm space-y-2" id="q-container-35">
+          <div class="text-sm font-normal text-black flex items-start">
+            <span class="q-number-box">35</span>
+            <span>What main point does Adam Martin make about video games?</span>
+          </div>
+          <div class="pl-8 space-y-1">
+            <label class="ielts-radio-label"><input type="radio" name="q35" value="A" onchange="updateQState(35, this.value)"> A. People are learning how to avoid becoming addicted to them.</label>
+            <label class="ielts-radio-label"><input type="radio" name="q35" value="B" onchange="updateQState(35, this.value)"> B. They enable people to learn without being aware of it happening.</label>
+            <label class="ielts-radio-label"><input type="radio" name="q35" value="C" onchange="updateQState(35, this.value)"> C. They satisfy a need for people to compete with each other.</label>
+            <label class="ielts-radio-label"><input type="radio" name="q35" value="D" onchange="updateQState(35, this.value)"> D. People learn a narrow range of skills but they are still useful.</label>
+          </div>
+        </div>
+
+        <!-- Question 36 -->
+        <div class="q-card p-3 border border-gray-300 rounded-sm space-y-2" id="q-container-36">
+          <div class="text-sm font-normal text-black flex items-start">
+            <span class="q-number-box">36</span>
+            <span>Which of the following does Steven Johnson disagree with?</span>
+          </div>
+          <div class="pl-8 space-y-1">
+            <label class="ielts-radio-label"><input type="radio" name="q36" value="A" onchange="updateQState(36, this.value)"> A. the opinion that video games offer educational benefits to the user</label>
+            <label class="ielts-radio-label"><input type="radio" name="q36" value="B" onchange="updateQState(36, this.value)"> B. the attitude that video games are often labelled as predictable and undemanding</label>
+            <label class="ielts-radio-label"><input type="radio" name="q36" value="C" onchange="updateQState(36, this.value)"> C. the idea that children's logic is tested more by video games than at school</label>
+            <label class="ielts-radio-label"><input type="radio" name="q36" value="D" onchange="updateQState(36, this.value)"> D. the suggestion that video games can be compared to scientific procedures</label>
+          </div>
+        </div>
+
+        <!-- Question 37 -->
+        <div class="q-card p-3 border border-gray-300 rounded-sm space-y-2" id="q-container-37">
+          <div class="text-sm font-normal text-black flex items-start">
+            <span class="q-number-box">37</span>
+            <span>Which of the following is the most suitable subtitle for Reading Passage 3?</span>
+          </div>
+          <div class="pl-8 space-y-1">
+            <label class="ielts-radio-label"><input type="radio" name="q37" value="A" onchange="updateQState(37, this.value)"> A. A debate about the effects of video games on other forms of technology.</label>
+            <label class="ielts-radio-label"><input type="radio" name="q37" value="B" onchange="updateQState(37, this.value)"> B. An examination of the opinions of young people about video games.</label>
+            <label class="ielts-radio-label"><input type="radio" name="q37" value="C" onchange="updateQState(37, this.value)"> C. A discussion of whether attitudes towards video games are outdated.</label>
+            <label class="ielts-radio-label"><input type="radio" name="q37" value="D" onchange="updateQState(37, this.value)"> D. An analysis of the principles behind the historical development of video games.</label>
+          </div>
+        </div>
+      </section>
+
+      <!-- Questions 38–40 Header -->
+      <section id="section-38-40" class="space-y-4 pt-4 border-t-2 border-black">
+        <div>
+          <h3 class="font-bold text-base text-black">Questions 38–40</h3>
+          <p class="text-xs text-gray-800 mt-1">
+            Complete each sentence with the correct ending, <span class="font-bold">A–E</span>, below.
+          </p>
+        </div>
+
+        <!-- Options Reference Box -->
+        <div class="options-box border-2 border-black p-3 bg-gray-50 space-y-1.5 text-xs text-gray-900">
+          <div class="flex items-start"><span class="font-bold w-6">A</span><span>young people have no problem separating their own lives from the ones they play on the screen.</span></div>
+          <div class="flex items-start"><span class="font-bold w-6">B</span><span>levels of reading ability will continue to drop significantly.</span></div>
+          <div class="flex items-start"><span class="font-bold w-6">C</span><span>new advances in technology have to be absorbed into our lives.</span></div>
+          <div class="flex items-start"><span class="font-bold w-6">D</span><span>games cannot provide preparation for the skills needed in real life.</span></div>
+          <div class="flex items-start"><span class="font-bold w-6">E</span><span>young people will continue to play video games despite warnings against doing so.</span></div>
+        </div>
+
+        <!-- Question 38 -->
+        <div class="q-card p-3 border border-gray-300 rounded-sm space-y-2" id="q-container-38">
+          <div class="text-sm font-normal text-black flex items-center gap-2 flex-wrap">
+            <span class="q-number-box">38</span>
+            <span>There is little evidence for the traditionalists' prediction that</span>
+            <select id="select-38" onchange="updateQState(38, this.value)" class="border border-black px-2 py-1 text-sm bg-white font-bold cursor-pointer">
+              <option value="">-- Choose A-E --</option>
+              <option value="A">A</option>
+              <option value="B">B</option>
+              <option value="C">C</option>
+              <option value="D">D</option>
+              <option value="E">E</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Question 39 -->
+        <div class="q-card p-3 border border-gray-300 rounded-sm space-y-2" id="q-container-39">
+          <div class="text-sm font-normal text-black flex items-center gap-2 flex-wrap">
+            <span class="q-number-box">39</span>
+            <span>A recent study by the US government found that</span>
+            <select id="select-39" onchange="updateQState(39, this.value)" class="border border-black px-2 py-1 text-sm bg-white font-bold cursor-pointer">
+              <option value="">-- Choose A-E --</option>
+              <option value="A">A</option>
+              <option value="B">B</option>
+              <option value="C">C</option>
+              <option value="D">D</option>
+              <option value="E">E</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Question 40 -->
+        <div class="q-card p-3 border border-gray-300 rounded-sm space-y-2" id="q-container-40">
+          <div class="text-sm font-normal text-black flex items-center gap-2 flex-wrap">
+            <span class="q-number-box">40</span>
+            <span>Richard Bartle suggests that it is important for people to accept the fact that</span>
+            <select id="select-40" onchange="updateQState(40, this.value)" class="border border-black px-2 py-1 text-sm bg-white font-bold cursor-pointer">
+              <option value="">-- Choose A-E --</option>
+              <option value="A">A</option>
+              <option value="B">B</option>
+              <option value="C">C</option>
+              <option value="D">D</option>
+              <option value="E">E</option>
+            </select>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+
+  </div>
+
+  <!-- Footer Toolbar Navigation -->
+  <footer class="bg-[#dcdcdc] border-t-2 border-gray-400 h-12 flex justify-between items-center px-4 shrink-0 shadow-inner z-40">
+    
+    <!-- Left Side: Part Navigation -->
+    <div class="flex items-center space-x-6 text-xs font-bold text-gray-700">
+      <div class="text-gray-500 cursor-pointer hover:text-black">
+        Part 1 <span class="font-normal">(0 of 13)</span>
+      </div>
+      <div class="text-gray-500 cursor-pointer hover:text-black">
+        Part 2 <span class="font-normal">(0 of 13)</span>
+      </div>
+      <div class="flex items-center space-x-2 text-black bg-white px-2 py-1 border border-black shadow-sm">
+        <span>Part 3</span>
+      </div>
+    </div>
+
+    <!-- Center: Interactive Question Grid Navigation 27-40 -->
+    <div id="q-nav-grid" class="flex items-center space-x-1 overflow-x-auto px-2">
+      <!-- Question Nav Buttons dynamically generated or rendered below -->
+    </div>
+
+    <!-- Right Side: Arrow Navigation and Submit Button -->
+    <div class="flex items-center space-x-2">
+      <button id="prev-btn" onclick="navigateQuestion(-1)" class="w-8 h-8 bg-gray-300 border border-gray-600 hover:bg-gray-400 text-black flex items-center justify-center font-bold">
+        ◄
+      </button>
+      <button id="next-btn" onclick="navigateQuestion(1)" class="w-8 h-8 bg-black hover:bg-gray-800 text-white flex items-center justify-center font-bold">
+        ►
+      </button>
+      <button title="Review Answers" class="w-8 h-8 bg-gray-200 hover:bg-gray-300 border border-gray-600 text-black flex items-center justify-center ml-2">
+        ✔
+      </button>
+    </div>
+
+  </footer>
+
+  <!-- Context Menu for Text Highlighting -->
+  <div id="context-menu">
+    <button id="menu-highlight" class="w-full text-left px-3 py-1.5 hover:bg-yellow-100 flex items-center gap-2 text-xs font-bold text-black">
+      <span class="w-3 h-3 bg-yellow-400 border border-black inline-block"></span>
+      Highlight
+    </button>
+    <button id="menu-clear" class="w-full text-left px-3 py-1.5 hover:bg-gray-100 flex items-center gap-2 text-xs text-gray-800 border-t border-gray-200">
+      Clear Highlight
+    </button>
+  </div>
+
+  <script>
+    // State management for user choices (Questions 27 to 40)
+    const answersState = {};
+    const totalQuestions = 40;
+    const currentQuestionsRange = [27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40];
+
+    // Initialize Question Navigation Buttons
+    const navGrid = document.getElementById('q-nav-grid');
+    
+    function renderNavButtons() {
+      navGrid.innerHTML = '';
+      currentQuestionsRange.forEach(qNum => {
+        const btn = document.createElement('button');
+        btn.id = `nav-btn-${qNum}`;
+        btn.className = 'w-7 h-7 text-xs font-bold border border-black bg-white text-black flex items-center justify-center transition-all';
+        btn.textContent = qNum;
+        btn.onclick = () => scrollToQuestion(qNum);
+        navGrid.appendChild(btn);
+      });
+    }
+
+    // Scroll to specified question in right pane
+    function scrollToQuestion(qNum) {
+      const container = document.getElementById(`q-container-${qNum}`);
+      if (container) {
+        container.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Highlight border temporarily
+        document.querySelectorAll('.q-card').forEach(el => el.classList.remove('border-black', 'border-2'));
+        container.classList.add('border-black', 'border-2');
+      }
+    }
+
+    // Update Answer state when user interacts
+    function updateQState(qNum, value) {
+      if (value && value !== "") {
+        answersState[qNum] = value;
+        const navBtn = document.getElementById(`nav-btn-${qNum}`);
+        if (navBtn) {
+          navBtn.classList.remove('bg-white', 'text-black');
+          navBtn.classList.add('bg-black', 'text-white');
+        }
+      } else {
+        delete answersState[qNum];
+        const navBtn = document.getElementById(`nav-btn-${qNum}`);
+        if (navBtn) {
+          navBtn.classList.remove('bg-black', 'text-white');
+          navBtn.classList.add('bg-white', 'text-black');
+        }
+      }
+    }
+
+    // Next / Previous Navigation
+    let currentFocusIndex = 0;
+    function navigateQuestion(direction) {
+      currentFocusIndex += direction;
+      if (currentFocusIndex < 0) currentFocusIndex = 0;
+      if (currentFocusIndex >= currentQuestionsRange.length) currentFocusIndex = currentQuestionsRange.length - 1;
+      
+      scrollToQuestion(currentQuestionsRange[currentFocusIndex]);
+    }
+
+    // 60-Minute Countdown Timer
+    let totalSeconds = 60 * 60;
+    const timerDisplay = document.getElementById('timer-display');
+
+    setInterval(() => {
+      if (totalSeconds > 0) {
+        totalSeconds--;
+        const mins = Math.floor(totalSeconds / 60);
+        const secs = totalSeconds % 60;
+        timerDisplay.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+      }
+    }, 1000);
+
+    // High Contrast Theme Toggle
+    document.getElementById('contrast-toggle').addEventListener('click', () => {
+      document.body.classList.toggle('high-contrast');
+    });
+
+    // Split Screen Resizer
+    const resizer = document.getElementById('resizer');
+    const leftPane = document.getElementById('left-pane');
+    const rightPane = document.getElementById('right-pane');
+    const splitContainer = document.getElementById('split-container');
+    let isDragging = false;
+
+    resizer.addEventListener('mousedown', () => {
+      isDragging = true;
+      resizer.classList.add('dragging');
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      const rect = splitContainer.getBoundingClientRect();
+      let leftWidth = e.clientX - rect.left;
+      
+      const minWidth = rect.width * 0.2;
+      const maxWidth = rect.width * 0.8;
+      
+      if (leftWidth < minWidth) leftWidth = minWidth;
+      if (leftWidth > maxWidth) leftWidth = maxWidth;
+
+      const leftPercent = (leftWidth / rect.width) * 100;
+      leftPane.style.width = `${leftPercent}%`;
+      rightPane.style.width = `${100 - leftPercent}%`;
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (isDragging) {
+        isDragging = false;
+        resizer.classList.remove('dragging');
+      }
+    });
+
+    // Native IELTS Text Highlighting engine
+    const contextMenu = document.getElementById('context-menu');
+    let currentSelectionRange = null;
+
+    document.addEventListener('contextmenu', (e) => {
+      const selectedText = window.getSelection().toString().trim();
+      
+      if (selectedText.length > 0 || e.target.classList.contains('ielts-highlight')) {
+        e.preventDefault();
+        const selection = window.getSelection();
+        if (selection.rangeCount > 0) {
+          currentSelectionRange = selection.getRangeAt(0);
+        }
+
+        contextMenu.style.top = `${e.pageY}px`;
+        contextMenu.style.left = `${e.pageX}px`;
+        contextMenu.style.display = 'block';
+      } else {
+        contextMenu.style.display = 'none';
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#context-menu')) {
+        contextMenu.style.display = 'none';
+      }
+    });
+
+    document.getElementById('menu-highlight').addEventListener('click', () => {
+      contextMenu.style.display = 'none';
+      if (!currentSelectionRange) return;
+
+      try {
+        const span = document.createElement('span');
+        span.className = 'ielts-highlight';
+        currentSelectionRange.surroundContents(span);
+      } catch (err) {
+        console.log('Highlight error:', err);
+      }
+      window.getSelection().removeAllRanges();
+    });
+
+    document.getElementById('menu-clear').addEventListener('click', () => {
+      contextMenu.style.display = 'none';
+      const selection = window.getSelection();
+      
+      if (selection.anchorNode) {
+        let node = selection.anchorNode.parentElement;
+        while (node && !node.classList.contains('ielts-highlight') && node !== document.body) {
+          node = node.parentElement;
+        }
+
+        if (node && node.classList.contains('ielts-highlight')) {
+          const parent = node.parentNode;
+          while (node.firstChild) {
+            parent.insertBefore(node.firstChild, node);
+          }
+          parent.removeChild(node);
+        }
+      }
+    });
+
+    // On Load Initializations
+    window.onload = function() {
+      renderNavButtons();
+    };
+  </script>
+</body>
+</html>
