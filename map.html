@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Computer-delivered Writing - Part 1 (Norbiton Maps)</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        html, body { width: 100%; height: 100%; background-color: #f4f5f7; color: #222; overflow: hidden; display: flex; flex-direction: column; }
+        .ielts-header { background-color: #ffffff; border-bottom: 2px solid #ddd; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; height: 60px; flex-shrink: 0; }
+        .brand-area { display: flex; align-items: center; gap: 20px; }
+        .ielts-logo { color: #d32f2f; font-weight: bold; font-size: 26px; letter-spacing: -1px; }
+        .test-taker-id { font-weight: bold; font-size: 14px; color: #333; }
+        .header-icons { display: flex; align-items: center; gap: 20px; }
+        .timer-display { font-size: 16px; font-weight: bold; background: #eef2f5; padding: 6px 12px; border-radius: 4px; color: #333; border: 1px solid #ccd2d8; }
+        .icon-btn { background: none; border: none; cursor: pointer; font-size: 18px; color: #555; }
+        .task-instruction-bar { background-color: #eef2f5; border-bottom: 1px solid #dcdcdc; padding: 12px 20px; flex-shrink: 0; }
+        .task-title { font-weight: bold; font-size: 15px; margin-bottom: 4px; }
+        .task-desc { font-size: 14px; color: #333; }
+        .workspace { display: flex; flex: 1; position: relative; overflow: hidden; width: 100%; }
+        .pane { height: 100%; overflow-y: auto; padding: 20px; background: #ffffff; }
+        .left-pane { width: 50%; border-right: 1px solid #ddd; flex-shrink: 0; }
+        .right-pane { flex: 1; display: flex; flex-direction: column; background: #fafbfc; padding: 20px; }
+        .splitter { width: 6px; background: #dcdcdc; cursor: col-resize; display: flex; align-items: center; justify-content: center; transition: background 0.2s; flex-shrink: 0; user-select: none; }
+        .splitter:hover { background: #b0b0b0; }
+        .splitter-handle { width: 16px; height: 32px; background: #fff; border: 1px solid #ccc; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #666; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .prompt-text { font-size: 14px; line-height: 1.5; margin-bottom: 20px; border: 1px solid #222; padding: 15px; }
+        .maps-container { display: flex; flex-direction: column; align-items: center; gap: 25px; padding-bottom: 30px; }
+        .map-box { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 500px; background: #fff; padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
+        .map-title { font-weight: bold; font-size: 14px; margin-bottom: 10px; color: #222; text-align: center; }
+        .map-legend { margin-top: 8px; display: flex; align-items: center; gap: 8px; font-size: 12px; border: 1px solid #333; padding: 4px 8px; }
+        .writing-textarea { flex: 1; width: 100%; min-height: 250px; border: 1px solid #ccc; border-radius: 4px; padding: 15px; font-size: 15px; line-height: 1.6; resize: none; outline: none; background: #fff; }
+        .writing-textarea:focus { border-color: #0056b3; box-shadow: 0 0 0 2px rgba(0,86,179,0.15); }
+        .word-count-display { text-align: right; font-size: 13px; color: #555; margin-top: 8px; margin-bottom: 10px; font-weight: bold; flex-shrink: 0; }
+        .footer-nav { background-color: #333; color: white; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; height: 55px; flex-shrink: 0; }
+        .nav-left { display: flex; align-items: center; gap: 15px; }
+        .nav-part-btn { background: #444; color: white; border: 1px solid #666; padding: 6px 14px; border-radius: 3px; cursor: pointer; font-weight: bold; }
+        .nav-part-btn.active { background: #0056b3; border-color: #004085; }
+        .nav-right { display: flex; align-items: center; gap: 10px; }
+        .nav-arrow-btn { background: #dcdcdc; color: #222; border: none; width: 38px; height: 38px; border-radius: 3px; font-size: 16px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .nav-arrow-btn:hover { background: #fff; }
+        .submit-icon-btn { background: #e2e8f0; border: none; width: 45px; height: 38px; border-radius: 3px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+    </style>
+</head>
+<body>
+    <!-- Global SVG Defs for reusable patterns -->
+    <svg style="width:0; height:0; position:absolute;" aria-hidden="true" focusable="false">
+        <defs>
+            <pattern id="factoryHatch" width="6" height="6" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+                <line x1="0" y1="0" x2="0" y2="6" stroke="#222" stroke-width="1.5" />
+            </pattern>
+            <pattern id="housingGrid" width="6" height="6" patternUnits="userSpaceOnUse">
+                <path d="M 6 0 L 0 0 0 6" fill="none" stroke="#222" stroke-width="1.5"/>
+            </pattern>
+        </defs>
+    </svg>
+
+    <!-- Top IELTS Header -->
+    <header class="ielts-header">
+        <div class="brand-area">
+            <div class="ielts-logo">IELTS</div>
+            <div class="test-taker-id">Test taker ID</div>
+        </div>
+        <div class="header-icons">
+            <div class="timer-display" id="timer">60:00</div>
+            <button class="icon-btn" title="Settings">⚙️</button>
+            <button class="icon-btn" title="Notifications">🔔</button>
+            <button class="icon-btn" title="Menu">☰</button>
+            <button class="icon-btn" title="Notes">✏️</button>
+        </div>
+    </header>
+
+    <!-- Sub-header Instructions -->
+    <div class="task-instruction-bar">
+        <div class="task-title">Part 1</div>
+        <div class="task-desc">You should spend about 20 minutes on this task. Write at least 150 words.</div>
+    </div>
+
+    <!-- Main Workspace -->
+    <div class="workspace" id="workspace">
+        <!-- Left Pane: Prompt & SVG Maps -->
+        <div class="pane left-pane" id="leftPane">
+            <div class="prompt-text">
+                <p><b>The maps below show an industrial area in the town of Norbiton, and planned future development of the site.</b></p><br>
+                <p><b>Summarise the information by selecting and reporting the main features, and make comparisons where relevant.</b></p>
+            </div>
+
+            <p style="margin-bottom: 15px; font-size: 14px;">Write at least 150 words.</p>
+
+            <div class="maps-container">
+                <!-- Map 1: Now -->
+                <div class="map-box">
+                    <div class="map-title">Norbiton industrial area now</div>
+                    <svg width="450" height="280" viewBox="0 0 450 280">
+                        <text x="210" y="25" font-size="11" font-weight="bold">Farmland</text>
+                        <path d="M 80 50 Q 200 30, 260 55 T 420 40" fill="none" stroke="#78909c" stroke-width="12"/>
+                        <text x="210" y="48" font-size="10" fill="#fff" font-weight="bold">River</text>
+                        <g transform="translate(380, 20)">
+                            <line x1="0" y1="-10" x2="0" y2="10" stroke="#000"/>
+                            <line x1="-10" y1="0" x2="10" y2="0" stroke="#000"/>
+                            <text x="-3" y="-13" font-size="9" font-weight="bold">N</text>
+                            <text x="-3" y="21" font-size="9" font-weight="bold">S</text>
+                            <text x="13" y="3" font-size="9" font-weight="bold">E</text>
+                            <text x="-21" y="3" font-size="9" font-weight="bold">W</text>
+                        </g>
+                        <line x1="110" y1="60" x2="110" y2="210" stroke="#333" stroke-dasharray="4,4" stroke-width="1.5"/>
+                        <text x="75" y="145" font-size="10" font-weight="bold">Town</text>
+                        <line x1="80" y1="210" x2="420" y2="210" stroke="#000" stroke-width="3"/>
+                        <line x1="225" y1="210" x2="225" y2="180" stroke="#000" stroke-width="2"/>
+                        <circle cx="225" cy="160" r="18" fill="none" stroke="#000" stroke-width="2"/>
+                        <line x1="243" y1="160" x2="380" y2="160" stroke="#000" stroke-width="2"/>
+
+                        <!-- Factory Boxes (Hatched) -->
+                        <rect x="205" y="110" width="35" height="15" fill="url(#factoryHatch)" stroke="#000"/>
+                        <rect x="175" y="125" width="15" height="35" fill="url(#factoryHatch)" stroke="#000" transform="rotate(-20 175 125)"/>
+                        <rect x="180" y="175" width="35" height="15" fill="url(#factoryHatch)" stroke="#000" transform="rotate(30 180 175)"/>
+                        <rect x="265" y="135" width="35" height="15" fill="url(#factoryHatch)" stroke="#000"/>
+                        <rect x="320" y="135" width="35" height="15" fill="url(#factoryHatch)" stroke="#000"/>
+                        <rect x="365" y="152" width="35" height="15" fill="url(#factoryHatch)" stroke="#000"/>
+                        <rect x="265" y="172" width="35" height="15" fill="url(#factoryHatch)" stroke="#000"/>
+                        <rect x="320" y="172" width="35" height="15" fill="url(#factoryHatch)" stroke="#000"/>
+                    </svg>
+                    <div class="map-legend">
+                        <svg width="30" height="15" style="border: 1px solid #000;"><rect width="30" height="15" fill="url(#factoryHatch)"/></svg>
+                        <span>= Factory</span>
+                    </div>
+                </div>
+
+                <!-- Map 2: Planned Development -->
+                <div class="map-box">
+                    <div class="map-title">Planned future development</div>
+                    <svg width="450" height="300" viewBox="0 0 450 300">
+                        <text x="290" y="55" font-size="11" font-weight="bold">Farmland</text>
+                        <path d="M 80 80 Q 200 60, 260 85 T 420 70" fill="none" stroke="#78909c" stroke-width="12"/>
+                        <text x="180" y="78" font-size="10" fill="#fff" font-weight="bold">River</text>
+                        <line x1="220" y1="70" x2="220" y2="95" stroke="#000" stroke-width="3"/>
+                        <line x1="230" y1="70" x2="230" y2="95" stroke="#000" stroke-width="3"/>
+                        <rect x="185" y="30" width="60" height="20" fill="url(#housingGrid)" stroke="#000" rx="3"/>
+                        <line x1="110" y1="90" x2="110" y2="260" stroke="#333" stroke-dasharray="4,4" stroke-width="1.5"/>
+                        <text x="75" y="175" font-size="10" font-weight="bold">Town</text>
+                        <line x1="80" y1="260" x2="420" y2="260" stroke="#000" stroke-width="3"/>
+                        <circle cx="225" cy="260" r="12" fill="#fff" stroke="#000" stroke-width="2"/>
+                        <line x1="225" y1="248" x2="225" y2="218" stroke="#000" stroke-width="2"/>
+                        <circle cx="225" cy="200" r="18" fill="none" stroke="#000" stroke-width="2"/>
+                        <line x1="225" y1="182" x2="225" y2="95" stroke="#000" stroke-width="2"/>
+                        <line x1="243" y1="200" x2="380" y2="200" stroke="#000" stroke-width="2"/>
+                        <line x1="210" y1="208" x2="150" y2="235" stroke="#000" stroke-width="2"/>
+                        
+                        <!-- Housing Developments -->
+                        <rect x="140" y="140" width="40" height="15" fill="url(#housingGrid)" stroke="#000" transform="rotate(-25 140 140)"/>
+                        <rect x="165" y="150" width="40" height="15" fill="url(#housingGrid)" stroke="#000" transform="rotate(-25 165 150)"/>
+                        <rect x="200" y="130" width="15" height="40" fill="url(#housingGrid)" stroke="#000"/>
+                        <rect x="260" y="180" width="35" height="15" fill="url(#housingGrid)" stroke="#000"/>
+                        <rect x="305" y="180" width="35" height="15" fill="url(#housingGrid)" stroke="#000"/>
+                        <rect x="270" y="220" width="45" height="15" fill="url(#housingGrid)" stroke="#000"/>
+
+                        <!-- Facilities -->
+                        <rect x="160" y="215" width="45" height="20" fill="#fff" stroke="#000" transform="rotate(-35 160 215)"/>
+                        <text x="168" y="228" font-size="8" font-weight="bold" transform="rotate(-35 160 215)">Shops</text>
+                        <rect x="238" y="220" width="40" height="20" fill="#fff" stroke="#000" transform="rotate(35 238 220)"/>
+                        <text x="240" y="230" font-size="7" font-weight="bold" transform="rotate(35 238 220)">Medical centre</text>
+                        <rect x="280" y="140" width="60" height="30" fill="#fff" stroke="#000"/>
+                        <text x="288" y="158" font-size="8" font-weight="bold">Playground</text>
+                        <path d="M 310 170 L 310 200" stroke="#000" stroke-width="1.5"/>
+                        <polygon points="380,180 405,180 405,200 415,200 415,230 380,230" fill="#fff" stroke="#000"/>
+                        <text x="385" y="205" font-size="8" font-weight="bold" transform="rotate(90 385 205)">School</text>
+                    </svg>
+                    <div class="map-legend">
+                        <svg width="30" height="15" style="border: 1px solid #000;"><rect width="30" height="15" fill="url(#housingGrid)"/></svg>
+                        <span>= Housing</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="splitter" id="splitter">
+            <div class="splitter-handle">⇕</div>
+        </div>
+
+        <div class="pane right-pane" id="rightPane">
+            <textarea class="writing-textarea" id="essayInput" placeholder="Type your answer here..."></textarea>
+            <div class="word-count-display" id="wordCount">Words: 0</div>
+        </div>
+    </div>
+
+    <footer class="footer-nav">
+        <div class="nav-left">
+            <button class="nav-part-btn active">Part 1</button>
+            <button class="nav-part-btn">Part 2</button>
+        </div>
+        <div class="nav-right">
+            <button class="nav-arrow-btn">◄</button>
+            <button class="nav-arrow-btn">►</button>
+            <button class="submit-icon-btn">✓</button>
+        </div>
+    </footer>
+
+    <script>
+        let totalSeconds = 60 * 60;
+        const timerDisplay = document.getElementById('timer');
+
+        function updateTimer() {
+            let minutes = Math.floor(totalSeconds / 60);
+            let seconds = totalSeconds % 60;
+            timerDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            if (totalSeconds > 0) {
+                totalSeconds--;
+            }
+        }
+        updateTimer();
+        setInterval(updateTimer, 1000);
+
+        const essayInput = document.getElementById('essayInput');
+        const wordCountDisplay = document.getElementById('wordCount');
+
+        essayInput.addEventListener('input', function() {
+            let text = this.value.trim();
+            let words = text === '' ? 0 : text.split(/\s+/).length;
+            wordCountDisplay.textContent = `Words: ${words}`;
+        });
+
+        const splitter = document.getElementById('splitter');
+        const leftPane = document.getElementById('leftPane');
+        const workspace = document.getElementById('workspace');
+
+        let isDragging = false;
+
+        splitter.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            document.body.style.cursor = 'col-resize';
+            e.preventDefault();
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            let containerRect = workspace.getBoundingClientRect();
+            let pointerX = e.clientX - containerRect.left;
+            let percentage = (pointerX / containerRect.width) * 100;
+
+            if (percentage > 20 && percentage < 80) {
+                leftPane.style.width = percentage + '%';
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+            document.body.style.cursor = 'default';
+        });
+    </script>
+</body>
+</html>
