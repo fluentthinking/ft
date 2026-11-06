@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IELTS Listening – Parts 1 to 4</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{font-family:Arial,Helvetica,sans-serif;color:#000;background:#fff;font-size:20px;display:flex;flex-direction:column}
+  header{display:flex;align-items:center;padding:6px 16px 6px 0;min-height:64px}
+  .logo{color:#e4002b;font-weight:900;font-size:44px;letter-spacing:-3px;margin:0 40px 0 0;line-height:1}
+  .logo sup{font-size:7px;letter-spacing:0;vertical-align:top}
+  .tt b{display:block;font-size:20px;font-weight:500}
+  .tt span{font-size:17px}
+  .icons{margin-left:auto;display:flex;gap:40px;align-items:center}
+  .icons svg{width:34px;height:34px;fill:none;stroke:#000;stroke-width:2}
+  main{flex:1;overflow-y:auto;position:relative;padding-bottom:20px}
+  .banner{background:#f1f1ee;border:1px solid #ddd;border-width:1px 0;padding:14px 24px 16px;margin-top:16px}
+  .banner b{display:block;margin-bottom:10px}
+  .content{padding:0 2px 0 2px;max-width:900px}
+  h3{font-size:20px;margin:20px 0 14px}
+  .title{font-weight:bold;margin:24px 0 36px}
+  .note{line-height:1.5}
+  .note h4{margin:22px 0 8px;font-size:20px}
+  .note .sub{margin:14px 0 6px;font-weight:normal}
+  ul{list-style:none;margin:0;padding:0 0 0 0}
+  li{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:0 0 14px 0;padding-left:22px;position:relative;min-height:36px}
+  li::before{content:"•";position:absolute;left:4px}
+  input.ans{font:inherit;font-weight:bold;text-align:center;border:1px solid #888;border-radius:4px;height:32px;width:170px;padding:0 6px;background:#fff;color:#000}
+  input.ans::placeholder{color:#000;font-weight:bold;opacity:1}
+  input.ans:focus{outline:none;border:2px solid #2f7bd6;box-shadow:0 0 0 1px #2f7bd6}
+  input.ans.filled::placeholder{opacity:0}
+  .money{display:flex;align-items:center;gap:6px}
+  .navbtns{position:fixed;right:0;top:50%;display:flex}
+  .navbtns button{height:76px;border:0;cursor:pointer}
+  .prev{width:76px;background:#dcdcdc;color:#fff;font-size:38px}
+  .next{width:30px;background:#000;border-radius:6px 0 0 6px}
+  footer{border-top:0;position:relative;padding:0 0 0 0;background:#fff}
+  .bar{display:flex;gap:3px;width:396px;height:3px;margin-bottom:0}
+  .bar i{flex:1;background:#ccc}
+  .bar i.done{background:#888}
+  .parts{display:flex;align-items:center;padding:16px 0 16px 8px;gap:0;overflow-x:auto}
+  .part{display:flex;align-items:center;white-space:nowrap}
+  .part+.part{margin-left:110px}
+  .part .pn{font-weight:bold;color:#000;margin-right:36px}
+  .part.off .pn{font-weight:normal;color:#444;margin-right:20px}
+  .part.off .cnt{color:#777}
+  .q{width:27px;height:36px;display:inline-flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;border:1px solid transparent;border-radius:3px;background:none}
+  .q.cur{border-color:#2f7bd6;border-width:1.5px}
+  .q.ans{text-decoration:underline}
+  .q.cur{font-weight:bold}
+  .opts{margin:6px 0 22px 0}
+  .opt{display:flex;align-items:flex-start;gap:12px;padding:5px 10px;margin:0 0 2px 0;border-radius:4px;cursor:pointer;line-height:1.35;max-width:640px}
+  .opt:hover{background:#f3f3f3}
+  .opt input{margin:4px 0 0 0;width:18px;height:18px;flex:none;accent-color:#2f7bd6;cursor:pointer}
+  .opt b{width:20px;flex:none}
+  .opt.sel{background:#e8f1fc}
+  .qrow{display:flex;gap:16px;margin:26px 0 4px;font-weight:bold}
+  .qrow .n{min-width:28px}
+  .grp{margin:30px 0 8px}
+  .grp .qh{font-weight:bold;margin:0 0 10px}
+  .grp .ins{font-style:italic;margin:0 0 14px}
+  .grp.focus,.qblock.focus{outline:2px solid #2f7bd6;outline-offset:6px;border-radius:4px}
+  .part .pn{cursor:pointer}
+  .part.off .cnt{cursor:pointer}
+  .hide{display:none}
+  .box{border:1px solid #555;max-width:760px;padding:14px 22px 10px;margin:18px 0 28px}
+  .box .bt{text-align:center;font-weight:bold;margin-bottom:12px}
+  .box .r{display:flex;gap:22px;margin:0 0 10px;line-height:1.35}
+  .box .r b{width:18px;flex:none}
+  .mrow{display:flex;align-items:center;gap:16px;margin:0 0 14px;max-width:640px;padding:3px 8px;border-radius:4px}
+  .mrow .n{font-weight:bold;min-width:28px}
+  .mrow .t{flex:1}
+  select.sel3{font:inherit;height:34px;width:110px;border:1px solid #888;border-radius:4px;background:#fff;padding:0 6px;cursor:pointer}
+  select.sel3:focus{outline:none;border:2px solid #2f7bd6}
+  .mrow.focus{outline:2px solid #2f7bd6;outline-offset:2px}
+  li.d{padding-left:48px}
+  li.d::before{content:"–";left:28px}
+  ::selection{background:#0b4ea2;color:#fff}
+  mark.hl{background:#ffe066;color:inherit;padding:0}
+  mark.hl.nt{background:#bfe0ff;border-bottom:2px dotted #1c6fd1;cursor:pointer}
+  mark.hl{cursor:pointer}
+  #hpop{position:fixed;z-index:1000;display:none;background:#fff;border:1px solid #bbb;border-radius:10px;box-shadow:0 4px 14px rgba(0,0,0,.18);padding:12px 22px 8px;user-select:none;-webkit-user-select:none;font-size:16px;color:#666}
+  #hpop::before{content:"";position:absolute;left:var(--ax,50%);top:-8px;width:14px;height:14px;background:#fff;border-left:1px solid #bbb;border-top:1px solid #bbb;transform:translateX(-50%) rotate(45deg)}
+  #hpop.up::before{top:auto;bottom:-8px;transform:translateX(-50%) rotate(225deg)}
+  #hpop .row{display:flex;gap:34px}
+  #hpop button.act{background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:4px;font:inherit;font-size:16px;color:#777;cursor:pointer;padding:0 2px}
+  #hpop button.act:hover{color:#000}
+  #hpop svg{width:26px;height:26px;fill:#666}
+  #hpop button.act:hover svg{fill:#000}
+  #hpop .ed{width:280px;padding:2px 0 6px;user-select:text;-webkit-user-select:text}
+  #hpop textarea{width:100%;height:84px;font:inherit;font-size:16px;border:1px solid #999;border-radius:4px;padding:6px;resize:none;color:#000}
+  #hpop .eb{display:flex;justify-content:flex-end;gap:12px;margin-top:8px}
+  #hpop .eb button{font:inherit;font-size:15px;padding:5px 14px;border-radius:4px;border:1px solid #888;background:#fff;cursor:pointer}
+  #hpop .eb button.pri{background:#2f7bd6;color:#fff;border-color:#2f7bd6}
+  .bm{position:absolute;right:14px;top:12px;display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #999;border-radius:6px;padding:7px 12px;font:inherit;font-size:16px;cursor:pointer;color:#222}
+  .bm svg{width:18px;height:22px;fill:none;stroke:#222;stroke-width:2}
+  .bm.on{background:#fdeaed;border-color:#e4002b}
+  .bm.on svg{fill:#e4002b;stroke:#e4002b}
+  .parts{padding-right:160px}
+  .q{position:relative}
+  .q.bk::after{content:"";position:absolute;top:0;right:1px;width:8px;height:13px;background:#e4002b;clip-path:polygon(0 0,100% 0,100% 100%,50% 72%,0 100%)}
+  .audio{margin-left:auto;display:flex;align-items:center;gap:8px;border:1px solid #888;border-radius:4px;padding:8px 14px;color:#000;text-decoration:none;font-size:17px;background:#fff}
+  .audio svg{width:24px;height:24px;fill:#000}
+  .audio:hover{background:#f1f1ee}
+  .audio:focus-visible{outline:2px solid #2f7bd6;outline-offset:2px}
+  .icons{margin-left:40px !important}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">IELTS<sup>™</sup></div>
+  <div class="tt"><b>Test taker ID</b><span>🔊 Audio is Playing</span></div>
+  <a class="audio" href="https://drive.google.com/file/d/1N0I98s5zdp-r864og8550fqXJ3N5MA7h/view?usp=sharing" target="_blank" rel="noopener noreferrer" title="Opens the audio in a new tab"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 4V5L7 9zM15 8.500a5 5 0 0 1 0 7M17.500 6a8.500 8.500 0 0 1 0 12" fill="none" stroke="#000" stroke-width="2"/></svg>Listening test audio</a>
+  <div class="icons">
+    <svg viewBox="0 0 24 24"><path d="M2 9a15 15 0 0 1 20 0M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0"/><circle cx="12" cy="19.5" r="1" fill="#000"/></svg>
+    <svg viewBox="0 0 24 24"><path d="M6 17V11a6 6 0 0 1 12 0v6l2 2H4zM10 21h4"/></svg>
+    <svg viewBox="0 0 24 24" style="stroke-width:3"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+  </div>
+</header>
+
+<main>
+  <div class="banner" id="banner"><b>Part 1</b><span>Listen and answer questions 1–10.</span></div>
+  <div class="content" id="part1">
+    <h3>Questions 1–10</h3>
+    <div>Complete the notes. Write <b>ONE WORD AND/OR A NUMBER</b> for each answer.</div>
+
+    <div class="title">Buckworth Conservation Group</div>
+
+    <div class="note">
+      <h4>Regular activities</h4>
+      <div class="sub">Beach</div>
+      <ul>
+        <li>making sure the beach does not have <input class="ans" data-q="1" placeholder="1"> on it</li>
+        <li>no <input class="ans" data-q="2" placeholder="2"></li>
+      </ul>
+      <div class="sub">Nature reserve</div>
+      <ul>
+        <li>maintaining paths</li>
+        <li>nesting boxes for birds installed</li>
+        <li>next task is taking action to attract <input class="ans" data-q="3" placeholder="3"> to the place</li>
+        <li>identifying types of <input class="ans" data-q="4" placeholder="4"></li>
+        <li>building a new <input class="ans" data-q="5" placeholder="5"></li>
+      </ul>
+
+      <h4>Forthcoming events</h4>
+      <div class="sub">Saturday</div>
+      <ul>
+        <li>meet at Dunsmore Beach car park</li>
+        <li>walk across the sands and reach the <input class="ans" data-q="6" placeholder="6"></li>
+        <li>take a picnic</li>
+        <li>wear appropriate <input class="ans" data-q="7" placeholder="7"></li>
+      </ul>
+      <div class="sub">Woodwork session</div>
+      <ul>
+        <li>suitable for <input class="ans" data-q="8" placeholder="8"> to participate in</li>
+        <li>making <input class="ans" data-q="9" placeholder="9"> out of wood</li>
+        <li>17th, from 10 a.m. to 3 p.m.</li>
+        <li>cost of session (no camping): <span class="money">£ <input class="ans" data-q="10" placeholder="10"></span></li>
+      </ul>
+    </div>
+  </div>
+  <div class="content hide" id="part2"></div>
+  <div class="content hide" id="part3"></div>
+  <div class="content hide" id="part4"><h3>Questions 31–40</h3><div>Complete the notes below.</div><div style="margin:14px 0 0">Write <b>ONE WORD ONLY</b> for each answer.</div><div class="title" style="text-align:center;font-size:24px;margin:26px 0 0">Labyrinths</div><div class="note"><h4>Definition</h4><ul><li>a winding spiral path leading to a central area</li></ul><h4>Labyrinths compared with mazes</h4><ul><li>Mazes are a type of <input class="ans" data-q="31" placeholder="31"></li><li class="d"><input class="ans" data-q="32" placeholder="32"> is needed to navigate through a maze</li><li class="d">the word ‘maze’ is derived from a word meaning a feeling of <input class="ans" data-q="33" placeholder="33"></li><li>Labyrinths represent a journey through life</li><li class="d">they have frequently been used in <input class="ans" data-q="34" placeholder="34"> and prayer</li></ul><h4>Early examples of the labyrinth spiral</h4><ul><li>Ancient carvings on <input class="ans" data-q="35" placeholder="35"> have been found across many cultures</li><li>The Pima, a Native American tribe, wove the symbol on baskets</li><li>Ancient Greeks used the symbol on <input class="ans" data-q="36" placeholder="36"></li></ul><h4>Walking labyrinths</h4><ul><li>The largest surviving example of a turf labyrinth once had a big <input class="ans" data-q="37" placeholder="37"> at its centre</li></ul><h4>Labyrinths nowadays</h4><ul><li>Believed to have a beneficial impact on mental and physical health, e.g., walking a maze can reduce a person’s <input class="ans" data-q="38" placeholder="38"> rate</li><li>Used in medical and health and fitness settings and also prisons</li><li>Popular with patients, visitors and staff in hospitals</li><li class="d">patients who can’t walk can use ‘finger labyrinths’ made from <input class="ans" data-q="39" placeholder="39"></li><li class="d">research has shown that Alzheimer’s sufferers experience less <input class="ans" data-q="40" placeholder="40"></li></ul></div></div>
+
+  <div class="navbtns">
+    <button class="prev" id="prev" aria-label="Previous">&#x2190;</button>
+    <button class="next" id="next" aria-label="Next"></button>
+  </div>
+</main>
+
+<footer>
+  <button class="bm" id="bm" aria-pressed="false" title="Bookmark this question"><svg viewBox="0 0 18 22"><path d="M2 1h14v19l-7-5-7 5z"/></svg><span>Bookmark</span></button>
+  <div class="bar" id="bar"></div>
+  <div class="parts">
+    <div class="part" id="pt1"></div>
+    <div class="part off" id="pt2"></div>
+    <div class="part off" id="pt3"></div>
+    <div class="part off" id="pt4"></div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var OPTS = {
+    11:["9","15","18"], 12:["dark red","jet black","light green"],
+    13:["Lunchbox 1","Lunchbox 2","Lunchbox 3"],
+    14:["take it home","hand it to a member of staff","put it in the bins provided on the boat"],
+    15:["why it was built","who built it","how long it took to build","who staffed it","what it was built with"],
+    17:["sea eagles","fur seals","dolphins","whales","penguins"],
+    19:["Only large tourist boats can visit them.","The entrances to them are often blocked.","It is too dangerous for individuals to go near them.","Someone will explain what is inside them.","They cannot be reached on foot."]
+  };
+  var SINGLE = {11:"What is the maximum number of people who can stand on each side of the boat?",
+    12:"What colour are the tour boats?",
+    13:"Which lunchbox is suitable for someone who doesn’t eat meat or fish?",
+    14:"What should people do with their litter?"};
+  var DOUBLE = {15:["Questions 15 and 16","Which <b>TWO</b> features of the lighthouse does Lou mention?"],
+    17:["Questions 17 and 18","Which <b>TWO</b> types of creature might come close to the boat?"],
+    19:["Questions 19 and 20","Which <b>TWO</b> points does Lou make about the caves?"]};
+  var L="ABCDE";
+
+  // ----- build Part 2
+  var h='<h3>Questions 11–14</h3><div>Choose the correct letter, <b>A</b>, <b>B</b> or <b>C</b>.</div>'+
+        '<div class="title" style="text-align:center;font-size:24px;margin:26px 0 8px">Boat trip round Tasmania</div>';
+  [11,12,13,14].forEach(function(n){
+    h+='<div class="qblock" data-q="'+n+'"><div class="qrow"><span class="n">'+n+'</span><span>'+SINGLE[n]+'</span></div><div class="opts" style="margin-left:44px">';
+    OPTS[n].forEach(function(t,k){
+      h+='<label class="opt"><input type="radio" name="q'+n+'" value="'+L[k]+'"><b>'+L[k]+'</b><span>'+t+'</span></label>';
+    });
+    h+='</div></div>';
+  });
+  [15,17,19].forEach(function(n){
+    h+='<div class="grp" data-g="'+n+'"><h3 style="margin-top:34px">'+DOUBLE[n][0]+'</h3><div class="ins">Choose <b>TWO</b> letters, <b>A–E</b>.</div>'+
+       '<div class="qh">'+DOUBLE[n][1]+'</div><div class="opts">';
+    OPTS[n].forEach(function(t,k){
+      h+='<label class="opt"><input type="checkbox" name="g'+n+'" value="'+L[k]+'"><b>'+L[k]+'</b><span>'+t+'</span></label>';
+    });
+    h+='</div></div>';
+  });
+  document.getElementById('part2').innerHTML=h;
+
+  var Q3={21:["What problem did both Diana and Tim have when arranging their work experience?",["making initial contact with suitable farms","organising transport to and from the farm","finding a placement for the required length of time"]],
+    22:["Tim was pleased to be able to help",["a lamb that had a broken leg.","a sheep that was having difficulty giving birth.","a newly born lamb that was having trouble feeding."]],
+    23:["Diana says the sheep on her farm",["were of various different varieties.","were mainly reared for their meat.","had better quality wool than sheep on the hills."]],
+    24:["What did the students learn about adding supplements to chicken feed?",["These should only be given if specially needed.","It is worth paying extra for the most effective ones.","The amount given at one time should be limited."]],
+    25:["What happened when Diana was working with dairy cows?",["She identified some cows incorrectly.","She accidentally threw some milk away.","She made a mistake when storing milk."]],
+    26:["What did both farmers mention about vets and farming?",["Vets are failing to cope with some aspects of animal health.","There needs to be a fundamental change in the training of vets.","Some jobs could be done by the farmer rather than by a vet."]]};
+  var OP3=["Tim found this easier than expected.","Tim thought this was not very clearly organised.","Diana may do some further study on this.","They both found the reading required for this was difficult.","Tim was shocked at something he learned on this module.","They were both surprised how little is known about some aspects of this."];
+  var MOD={27:"Medical terminology",28:"Diet and nutrition",29:"Animal disease",30:"Wildlife medication"};
+  var h3='<h3>Questions 21–26</h3><div>Choose the correct letter, <b>A</b>, <b>B</b> or <b>C</b>.</div>'+
+    '<div class="title" style="text-align:center;font-size:24px;margin:26px 0 8px">Work experience for veterinary science students</div>';
+  for(var n=21;n<=26;n++){
+    h3+='<div class="qblock" data-q="'+n+'"><div class="qrow"><span class="n">'+n+'</span><span>'+Q3[n][0]+'</span></div><div class="opts" style="margin-left:44px">';
+    Q3[n][1].forEach(function(t,k){h3+='<label class="opt"><input type="radio" name="q'+n+'" value="'+L[k]+'"><b>'+L[k]+'</b><span>'+t+'</span></label>';});
+    h3+='</div></div>';
+  }
+  h3+='<h3 style="margin-top:40px">Questions 27–30</h3><div>What opinion do the students give about each of the following modules on their veterinary science course?</div>'+
+    '<div style="font-style:italic;margin:16px 0">Choose <b>FOUR</b> answers from the box and write the correct letter, <b>A–F</b>, next to questions 27–30.</div>'+
+    '<div class="box"><div class="bt">Opinions</div>';
+  OP3.forEach(function(t,k){h3+='<div class="r"><b>'+L[k]+'</b><span>'+t+'</span></div>';});
+  h3+='</div><div style="font-weight:bold;margin:0 0 14px 28px">Modules on Veterinary Science course</div>';
+  for(n=27;n<=30;n++){
+    h3+='<div class="mrow" data-m="'+n+'"><span class="n">'+n+'</span><span class="t">'+MOD[n]+'</span><select class="sel3" data-q="'+n+'"><option value=""></option>';
+    for(var k=0;k<6;k++) h3+='<option value="'+L[k]+'">'+L[k]+'</option>';
+    h3+='</select></div>';
+  }
+  document.getElementById('part3').innerHTML=h3;
+
+  // ----- state
+  var cur=1, part=1, BM={};
+  var inputs4=[].slice.call(document.querySelectorAll('#part4 input.ans'));
+  var inputs=[].slice.call(document.querySelectorAll('#part1 input.ans'));
+
+  function isAnswered(n){
+    if(n<=10) return inputs[n-1].value.trim()!=='';
+    if(n>=31) return inputs4[n-31].value.trim()!=='';
+    if(n>=27) return document.querySelector('select[data-q="'+n+'"]').value!=='';
+    if(n>=21) return !!document.querySelector('input[name="q'+n+'"]:checked');
+    if(n<=14) return !!document.querySelector('input[name="q'+n+'"]:checked');
+    var g=n%2? n : n-1, c=document.querySelectorAll('input[name="g'+g+'"]:checked').length;
+    return n%2 ? c>=1 : c>=2;
+  }
+  function count(p){var s=(p-1)*10+1,c=0;for(var n=s;n<s+10;n++) if(isAnswered(n)) c++;return c;}
+
+  function renderFooter(){
+    [1,2,3,4].forEach(function(p){
+      var el=document.getElementById('pt'+p), active=part===p, s=(p-1)*10+1;
+      el.className='part'+(active?'':' off');
+      var html='<span class="pn" data-p="'+p+'">Part '+p+'</span>';
+      if(active){
+        html+='<span>';
+        for(var n=s;n<s+10;n++)
+          html+='<button class="q'+(n===cur?' cur':'')+(isAnswered(n)?' ans':'')+(BM[n]?' bk':'')+'" data-n="'+n+'">'+n+'</button>';
+        html+='</span>';
+      } else html+='<span class="cnt" data-p="'+p+'">'+count(p)+' of 10</span>';
+      el.innerHTML=html;
+    });
+    var bar=document.getElementById('bar'), s2=(part-1)*10+1;
+    bar.innerHTML='';
+    for(var n=s2;n<s2+10;n++){var i=document.createElement('i'); if(isAnswered(n)) i.className='done'; bar.appendChild(i);}
+    var bm=document.getElementById('bm'); bm.classList.toggle('on',!!BM[cur]); bm.setAttribute('aria-pressed',!!BM[cur]);
+  }
+
+  function showPart(p){
+    part=p;
+    document.getElementById('part1').classList.toggle('hide',p!==1);
+    document.getElementById('part2').classList.toggle('hide',p!==2);
+    document.getElementById('part3').classList.toggle('hide',p!==3);
+    document.getElementById('part4').classList.toggle('hide',p!==4);
+    document.getElementById('banner').innerHTML='<b>Part '+p+'</b><span>Listen and answer questions '+((p-1)*10+1)+'–'+(p*10)+'.</span>';
+    document.querySelector('main').scrollTop=0;
+  }
+
+  function focusQ(n){
+    n=Math.min(40,Math.max(1,n));
+    var p=Math.ceil(n/10);
+    if(p!==part) showPart(p);
+    cur=n;
+    document.querySelectorAll('.focus').forEach(function(e){e.classList.remove('focus');});
+    var target;
+    if(n<=10){ target=inputs[n-1]; target.focus(); }
+    else if(n>=31){ target=inputs4[n-31]; target.focus(); }
+    else if(n>=27){ target=document.querySelector('.mrow[data-m="'+n+'"]'); target.classList.add('focus'); target.querySelector('select').focus({preventScroll:true}); }
+    else if(n>=21){ target=document.querySelector('.qblock[data-q="'+n+'"]'); target.classList.add('focus'); }
+    else if(n<=14){ target=document.querySelector('.qblock[data-q="'+n+'"]'); target.classList.add('focus'); }
+    else { var g=n%2? n : n-1; target=document.querySelector('.grp[data-g="'+g+'"]'); target.classList.add('focus'); }
+    target.scrollIntoView({block:'center',behavior:'smooth'});
+    renderFooter();
+  }
+
+  // ----- events
+  inputs4.forEach(function(inp,idx){
+    inp.setAttribute('autocomplete','off'); inp.setAttribute('spellcheck','false');
+    inp.addEventListener('focus',function(){cur=idx+31;renderFooter();});
+    inp.addEventListener('input',function(){inp.classList.toggle('filled',inp.value.trim()!=='');renderFooter();});
+  });
+  inputs.forEach(function(inp,idx){
+    inp.setAttribute('autocomplete','off'); inp.setAttribute('spellcheck','false');
+    inp.addEventListener('focus',function(){cur=idx+1;renderFooter();});
+    inp.addEventListener('input',function(){inp.classList.toggle('filled',inp.value.trim()!=='');renderFooter();});
+  });
+
+  ['part2','part3'].forEach(function(pid){ var root=document.getElementById(pid);
+  root.addEventListener('change',function(e){
+    var t=e.target;
+    if(t.type==='checkbox'){
+      var all=document.querySelectorAll('input[name="'+t.name+'"]:checked');
+      if(all.length>2) t.checked=false;
+    }
+    document.querySelectorAll('#'+pid+' .opt').forEach(function(l){l.classList.toggle('sel',l.querySelector('input').checked);});
+    renderFooter();
+  });
+  root.addEventListener('click',function(e){
+    var b=e.target.closest('.qblock,.grp,.mrow'); if(!b) return;
+    document.querySelectorAll('.focus').forEach(function(x){x.classList.remove('focus');});
+    b.classList.add('focus');
+    var n=b.dataset.q? +b.dataset.q : (b.dataset.m? +b.dataset.m : +b.dataset.g);
+    if(!b.dataset.q){ var c=document.querySelectorAll('input[name="g'+n+'"]:checked').length; if(c>=1) n++; }
+    cur=n; renderFooter();
+  });
+  });
+
+  document.querySelector('footer').addEventListener('click',function(e){
+    var q=e.target.closest('.q'); if(q){focusQ(+q.dataset.n);return;}
+    var p=e.target.closest('[data-p]'); if(p){var np=+p.dataset.p; if(np!==part) focusQ((np-1)*10+1);}
+  });
+  document.getElementById('prev').onclick=function(){focusQ(cur-1);};
+  document.getElementById('next').onclick=function(){focusQ(cur+1);};
+
+  // ----- bookmark
+  document.getElementById('bm').onclick=function(){ BM[cur]=!BM[cur]; renderFooter(); };
+
+  // ----- highlight / note
+  var main=document.querySelector('main'), pop=document.createElement('div'), hid=0, NOTES={}, curRange=null, curHid=null, curRect=null;
+  pop.id='hpop'; document.body.appendChild(pop);
+  var ICON_NOTE='<svg viewBox="0 0 24 24"><path d="M4 4h16v12H9l-5 4zM8 8v2.6h2.2c0 1-.5 1.7-1.6 2l.5.9C10.800 13 11.500 11.800 11.500 10V8zm5 0v2.600h2.200c0 1-.5 1.700-1.600 2l.5.900c1.300-.4 2-1.600 2-3.400V8z" fill-rule="evenodd"/></svg>';
+  var ICON_HL='<svg viewBox="0 0 24 24"><path d="M14 3h4v10l-3 2v3H9v-3l-3-2V8z M4 20h16v2H4z"/></svg>';
+  function hide(){ pop.style.display='none'; curRange=null; curHid=null; }
+  function place(rect){
+    pop.style.display='block';
+    var w=pop.offsetWidth, h=pop.offsetHeight, cx=rect.left+rect.width/2;
+    var left=Math.max(8,Math.min(innerWidth-w-8,cx-w/2));
+    var top=rect.bottom+14, up=false;
+    if(top+h>innerHeight-8){ top=rect.top-h-14; up=true; }
+    pop.className=up?'up':'';
+    pop.style.left=left+'px'; pop.style.top=Math.max(8,top)+'px';
+    pop.style.setProperty('--ax',Math.max(18,Math.min(w-18,cx-left))+'px');
+  }
+  function showSel(rect){
+    pop.innerHTML='<div class="row"><button class="act" data-a="note">'+ICON_NOTE+'<span>Note</span></button><button class="act" data-a="hl">'+ICON_HL+'<span>Highlight</span></button></div>';
+    curRect=rect; place(rect);
+  }
+  function showMark(rect){
+    pop.innerHTML='<div class="row"><button class="act" data-a="note">'+ICON_NOTE+'<span>Note</span></button><button class="act" data-a="clear">'+ICON_HL+'<span>Clear</span></button></div>';
+    curRect=rect; place(rect);
+  }
+  function showEditor(){
+    var t=NOTES[curHid]||'';
+    pop.innerHTML='<div class="ed"><textarea placeholder="Type your note here"></textarea><div class="eb">'+(t?'<button data-a="delnote">Delete</button>':'')+'<button class="pri" data-a="save">Save</button></div></div>';
+    pop.querySelector('textarea').value=t;
+    place(curRect); pop.querySelector('textarea').focus();
+  }
+  function marks(id){ return document.querySelectorAll('mark.hl[data-h="'+id+'"]'); }
+  function applyHL(r,note){
+    var id=++hid, root=r.commonAncestorContainer, list=[];
+    function consider(n){
+      if(!n.nodeValue.trim()) return;
+      var pe=n.parentElement; if(!pe||pe.closest('select,option,textarea,script,style,#hpop')) return;
+      var st=n===r.startContainer?r.startOffset:0, en=n===r.endContainer?r.endOffset:n.length;
+      if(st<en) list.push({n:n,st:st,en:en});
+    }
+    if(root.nodeType===3) consider(root);
+    else { var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null), n;
+      while((n=w.nextNode())) if(r.intersectsNode(n)) consider(n); }
+    list.forEach(function(o){
+      var t=o.n; if(o.st>0) t=t.splitText(o.st);
+      if(o.en-o.st<t.length) t.splitText(o.en-o.st);
+      var m=document.createElement('mark'); m.className='hl'+(note?' nt':''); m.dataset.h=id;
+      t.parentNode.insertBefore(m,t); m.appendChild(t);
+    });
+    return id;
+  }
+  function clearHL(id){
+    [].slice.call(marks(id)).forEach(function(m){
+      var p=m.parentNode; while(m.firstChild) p.insertBefore(m.firstChild,m); p.removeChild(m); p.normalize();
+    });
+    delete NOTES[id];
+  }
+  function markNote(id){
+    [].slice.call(marks(id)).forEach(function(m){ m.classList.add('nt'); m.title=NOTES[id]||''; });
+  }
+  function onSelect(e){
+    if(pop.contains(e.target)) return;
+    setTimeout(function(){
+      var ae=document.activeElement;
+      if(ae&&/^(INPUT|SELECT|TEXTAREA)$/.test(ae.tagName)&&!pop.contains(ae)) { hide(); return; }
+      var sel=getSelection();
+      if(sel.rangeCount&&!sel.isCollapsed){
+        var r=sel.getRangeAt(0);
+        if(main.contains(r.commonAncestorContainer)&&sel.toString().trim()){
+          curRange=r.cloneRange(); curHid=null; showSel(r.getBoundingClientRect()); return;
+        }
+      }
+      var mk=e.target.closest&&e.target.closest('mark.hl');
+      if(mk&&main.contains(mk)){ curHid=+mk.dataset.h; showMark(mk.getBoundingClientRect()); return; }
+      hide();
+    },0);
+  }
+  document.addEventListener('mouseup',onSelect);
+  document.addEventListener('touchend',onSelect);
+  document.addEventListener('keyup',function(e){ if(e.shiftKey) onSelect(e); });
+  document.addEventListener('mousedown',function(e){ if(!pop.contains(e.target)) hide(); });
+  main.addEventListener('scroll',hide);
+  pop.addEventListener('mousedown',function(e){ if(e.target.tagName!=='TEXTAREA') e.preventDefault(); });
+  pop.addEventListener('click',function(e){
+    var b=e.target.closest('button[data-a]'); if(!b) return;
+    var a=b.dataset.a;
+    if(a==='hl'){ applyHL(curRange,false); getSelection().removeAllRanges(); hide(); }
+    else if(a==='note'){
+      if(curHid===null){ curHid=applyHL(curRange,true); getSelection().removeAllRanges(); }
+      showEditor();
+    }
+    else if(a==='clear'){ clearHL(curHid); hide(); }
+    else if(a==='save'){
+      var t=pop.querySelector('textarea').value.trim();
+      if(t){ NOTES[curHid]=t; markNote(curHid); } else { delete NOTES[curHid]; [].slice.call(marks(curHid)).forEach(function(m){m.classList.remove('nt');m.removeAttribute('title');}); }
+      hide();
+    }
+    else if(a==='delnote'){
+      delete NOTES[curHid];
+      [].slice.call(marks(curHid)).forEach(function(m){m.classList.remove('nt');m.removeAttribute('title');});
+      hide();
+    }
+  });
+
+  renderFooter(); focusQ(1);
+})();
+</script>
+</body>
+</html>
